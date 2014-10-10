@@ -1,7 +1,6 @@
 package com.pettinder;
 
 import android.support.v7.app.ActionBarActivity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -11,78 +10,51 @@ import android.widget.Button;
 
 
 
-public class MainActivity extends ActionBarActivity {
+public class DiscoveryActivity extends ActionBarActivity {
 
-	Button button1, button2;
-    Intent discoveryIntent;
-
-    // onClickListeners    
-	View.OnClickListener destroy = (new View.OnClickListener() {
-        public void onClick(View v) {
-            finish();
-        }
-    });
-	View.OnClickListener discovery = (new View.OnClickListener() {
-		public void onClick(View v){
-			startActivity(discoveryIntent);
-		}
-	});
 	
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        //define intents
-        discoveryIntent = new Intent(this, DiscoveryActivity.class);
-    	// register buttons
-    	button1 = (Button) findViewById(R.id.button1);
-        button1.setOnClickListener(destroy);
-        button2 = (Button) findViewById(R.id.button2);
-        button2.setOnClickListener(discovery);
-        Log.d("Checkpoint 3", "Called onCreate");
+        setContentView(R.layout.activity_discovery);
     }
 
     
     @Override
     protected void onStart(){
     	super.onStart();
-        Log.d("Checkpoint 3", "Called onStart");
     }
     
     @Override
     protected void onRestart(){
     	super.onRestart();
-        Log.d("Checkpoint 3", "Called onRestart");
     }
     
     @Override
     protected void onResume(){
     	super.onResume();
-        Log.d("Checkpoint 3", "Called onResume");
     }
     
     @Override
     protected void onPause(){
     	super.onPause();
-        Log.d("Checkpoint 3", "Called onPause");
     }
     
     @Override
     protected void onStop(){
     	super.onStop();
-        Log.d("Checkpoint 3", "Called onStop");
     }
 
     @Override
     protected void onDestroy(){
     	super.onDestroy();
-        Log.d("Checkpoint 3", "Called onDestroy");
     }
     
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.discovery_menu, menu);
         return true;
     }
 
@@ -92,8 +64,10 @@ public class MainActivity extends ActionBarActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
+        if (id == R.id.settings) {
             return true;
+        }else if(id == R.id.matches){
+        	return true;
         }
         return super.onOptionsItemSelected(item);
     }

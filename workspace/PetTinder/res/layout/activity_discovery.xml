@@ -14,22 +14,4 @@
         android:layout_height="wrap_content"
         android:text="@string/hello_world" />
 
-    <Button
-        android:id="@+id/button1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView1"
-        android:layout_below="@+id/button2"
-        android:layout_marginTop="18dp"
-        android:text="@string/button1_string" />
-
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/button1"
-        android:layout_below="@+id/textView1"
-        android:layout_marginTop="20dp"
-        android:text="@string/button2_string" />
-
 </RelativeLayout>
