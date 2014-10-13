@@ -14,7 +14,8 @@ import android.widget.Button;
 public class MainActivity extends ActionBarActivity {
 
 	Button button1, button2;
-    Intent discoveryIntent;
+    Intent discoveryIntent, settingsIntent;
+    
 
     // onClickListeners    
 	View.OnClickListener destroy = (new View.OnClickListener() {
@@ -34,9 +35,10 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
         //define intents
         discoveryIntent = new Intent(this, DiscoveryActivity.class);
+        settingsIntent = new Intent(this, SettingsActivity.class);
+
     	// register buttons
-    	button1 = (Button) findViewById(R.id.button1);
-        button1.setOnClickListener(destroy);
+    	button1 = 
         button2 = (Button) findViewById(R.id.button2);
         button2.setOnClickListener(discovery);
         Log.d("Checkpoint 3", "Called onCreate");
@@ -93,6 +95,7 @@ public class MainActivity extends ActionBarActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_settings) {
+        	startActivity(settingsIntent);
             return true;
         }
         return super.onOptionsItemSelected(item);

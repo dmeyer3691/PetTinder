@@ -11,27 +11,20 @@ import android.widget.Button;
 
 
 
-public class DiscoveryActivity extends ActionBarActivity {
+public class AppSettingsActivity extends ActionBarActivity {
 
-    Intent matchesIntent, settingsIntent;
-    
-    
-    /*
-	View.OnClickListener matches = (new View.OnClickListener() {
-		public void onClick(View v){
-			startActivity(matchesIntent);
-		}
-	});
-	*/
+	Intent settingsIntent;
+	
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_discovery);
+        setContentView(R.layout.activity_app_settings);
         //define intents
-        matchesIntent = new Intent(this, MatchesActivity.class);
         settingsIntent = new Intent(this, SettingsActivity.class);
 
+        
+        // Grab list of matches for current user from AWS and display as buttons with pictures
     }
 
     
@@ -68,7 +61,9 @@ public class DiscoveryActivity extends ActionBarActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.discovery_menu, menu);
+    	
+    	//shoulnd't need this
+        //getMenuInflater().inflate(R.menu.view_profile_menu, menu);
         return true;
     }
 
@@ -77,14 +72,16 @@ public class DiscoveryActivity extends ActionBarActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
+    	
+    	
+    	//shoulnd't need this
+    	/*
         int id = item.getItemId();
         if (id == R.id.settings) {
         	startActivity(settingsIntent);
             return true;
-        }else if(id == R.id.matches){
-        	startActivity(matchesIntent);
-        	return true;
         }
+        */
         return super.onOptionsItemSelected(item);
     }
     

@@ -11,27 +11,20 @@ import android.widget.Button;
 
 
 
-public class DiscoveryActivity extends ActionBarActivity {
+public class EditProfileActivity extends ActionBarActivity {
 
-    Intent matchesIntent, settingsIntent;
-    
-    
-    /*
-	View.OnClickListener matches = (new View.OnClickListener() {
-		public void onClick(View v){
-			startActivity(matchesIntent);
-		}
-	});
-	*/
+	Intent settingsIntent;
+	
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_discovery);
+        setContentView(R.layout.activity_edit_profile);
         //define intents
-        matchesIntent = new Intent(this, MatchesActivity.class);
         settingsIntent = new Intent(this, SettingsActivity.class);
 
+        
+        
     }
 
     
@@ -68,7 +61,9 @@ public class DiscoveryActivity extends ActionBarActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.discovery_menu, menu);
+       
+    	//shoulnd't need this here
+    	//getMenuInflater().inflate(R.menu.view_profile_menu, menu);
         return true;
     }
 
@@ -77,14 +72,15 @@ public class DiscoveryActivity extends ActionBarActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+       
+    	//shouldn't need this here
+    	/*
+    	int id = item.getItemId();
         if (id == R.id.settings) {
         	startActivity(settingsIntent);
             return true;
-        }else if(id == R.id.matches){
-        	startActivity(matchesIntent);
-        	return true;
         }
+        */
         return super.onOptionsItemSelected(item);
     }
     

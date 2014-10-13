@@ -11,27 +11,20 @@ import android.widget.Button;
 
 
 
-public class DiscoveryActivity extends ActionBarActivity {
+public class ConnectionActivity extends ActionBarActivity {
 
-    Intent matchesIntent, settingsIntent;
-    
-    
-    /*
-	View.OnClickListener matches = (new View.OnClickListener() {
-		public void onClick(View v){
-			startActivity(matchesIntent);
-		}
-	});
-	*/
+	Intent settingsIntent, viewProfileIntent;
+
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_discovery);
+        setContentView(R.layout.activity_connection);
         //define intents
-        matchesIntent = new Intent(this, MatchesActivity.class);
         settingsIntent = new Intent(this, SettingsActivity.class);
-
+        viewProfileIntent = new Intent(this, ViewProfileActivity.class);
+        //define buttons
+       
     }
 
     
@@ -68,7 +61,7 @@ public class DiscoveryActivity extends ActionBarActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.discovery_menu, menu);
+        getMenuInflater().inflate(R.menu.connection_menu, menu);
         return true;
     }
 
@@ -81,8 +74,14 @@ public class DiscoveryActivity extends ActionBarActivity {
         if (id == R.id.settings) {
         	startActivity(settingsIntent);
             return true;
-        }else if(id == R.id.matches){
-        	startActivity(matchesIntent);
+        }else if (id == R.id.view_profile) {
+        	startActivity(viewProfileIntent);
+        	return true;
+        }else if (id == R.id.remove_match) {
+        	// todo
+        	return true;
+        }else if (id == R.id.report_match){
+        	//todo
         	return true;
         }
         return super.onOptionsItemSelected(item);
