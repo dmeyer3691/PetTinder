@@ -8,5 +8,21 @@
     <string name="button2_string">Discovery Page</string>
     <string name="settings_string">Settings</string>
     <string name="matches_string">Matches</string>
+    <string name="discovery_string">Discovery</string>
+    <string name="view_profile_string">View Profile</string>
+    <string name="discovery_preferences_string">Discovery Preferences</string>
+    <string name="app_settings_string">App Settings</string>
+    <string name="share_pettinder_string">Share PetTinder</string>
+    <string name="edit_profile_string">Edit Profile</string>
+    <string name="connection_string">Connection</string>
+    <string name="remove_match_string">Remove Match</string>
+    <string name="report_match_string">Report Match</string>
+    <string name="discoveryNo">No</string>
+    <string name="discoveryYes">Yes</string>
+    <string name="discoveryMore">Profile Options</string>
+    <string name="discoveryImage">Profile Picture</string>
+    <string name="discoveryName">Default Name</string>
+    <string name="discoveryBreed">Default Breed</string>
+    
 
 </resources>

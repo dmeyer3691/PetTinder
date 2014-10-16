@@ -38,7 +38,8 @@ public class MainActivity extends ActionBarActivity {
         settingsIntent = new Intent(this, SettingsActivity.class);
 
     	// register buttons
-    	button1 = 
+    	button1 = (Button) findViewById(R.id.button1);
+    	button1.setOnClickListener(destroy);
         button2 = (Button) findViewById(R.id.button2);
         button2.setOnClickListener(discovery);
         Log.d("Checkpoint 3", "Called onCreate");
