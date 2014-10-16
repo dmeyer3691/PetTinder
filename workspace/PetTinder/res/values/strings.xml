@@ -8,5 +8,11 @@
     <string name="button2_string">Discovery Page</string>
     <string name="settings_string">Settings</string>
     <string name="matches_string">Matches</string>
+    <string name="discoveryNo">No</string>
+    <string name="discoveryYes">Yes</string>
+    <string name="discoveryMore">Profile Options</string>
+    <string name="discoveryImage">Profile Picture</string>
+    <string name="discoveryName">Default Name</string>
+    <string name="discoveryBreed">Default Breed</string>
 
 </resources>

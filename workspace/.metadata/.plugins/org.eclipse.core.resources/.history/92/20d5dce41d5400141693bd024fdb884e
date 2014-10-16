@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">PetTinder</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="button1_string">Destroy Activity</string>
+    <string name="button2_string">Discovery Page</string>
+    <string name="settings_string">Settings</string>
+    <string name="matches_string">Matches</string>
+    <string name="discoveryNo">No</string>
+    <string name="discoveryYes">Yes</string>
+    <string name="discoveryMore">Profile Options</string>
+    <string name="discoveryImage">Profile Picture</string>
+
+</resources>

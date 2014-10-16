@@ -1,0 +1,82 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.pettinder.MainActivity" >
+
+    <RelativeLayout
+        android:id="@+id/discoveryProfileLayout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3"
+        android:orientation="vertical" >
+
+        <ImageView
+            android:id="@+id/discoveryImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/discoveryImage"
+            android:src="@drawable/loudnoises" />
+
+        <LinearLayout
+            android:id="@+id/ProfileInfoLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/discoveryImage" >
+
+            <TextView
+                android:id="@+id/discoveryName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Dog" />
+            <TextView
+                android:id="@+id/discoveryBreed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:gravity="end"
+                android:text="Breed" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/discoveryChoicesLayout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2" >
+
+        <ImageView
+            android:id="@+id/discoveryNo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/discoveryMore"
+            android:layout_toStartOf="@+id/discoveryMore"
+            android:contentDescription="@string/discoveryNo"
+            android:src="@drawable/ic_action_bad" />
+
+        <ImageView
+            android:id="@+id/discoveryMore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:contentDescription="@string/discoveryMore"
+            android:src="@drawable/ic_launcher" />
+
+        <ImageView
+            android:id="@+id/discoveryYes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@id/discoveryMore"
+            android:layout_toRightOf="@id/discoveryMore"
+            android:contentDescription="@string/discoveryYes"
+            android:src="@drawable/ic_action_good" />
+    </RelativeLayout>
+
+</LinearLayout>
