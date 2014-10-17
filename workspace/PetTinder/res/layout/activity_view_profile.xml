@@ -13,5 +13,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/view_profile_string" />
+    
+    <ImageView 
+        android:id="@+id/profilePicture"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/profile_picture_string"
+        android:src="@drawable/loudnoises"/>
+    
+    <TextView
+        android:id="@+id/profileBio"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/profilePicture"
+        android:text="@string/profile_bio_string" />
 
 </RelativeLayout>

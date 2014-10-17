@@ -24,6 +24,14 @@
     <string name="discoveryName">Default Name</string>
     <string name="discoveryBreed">Default Breed</string>
     <string name="search_string">Search</string>
+    <string name="profile_picture_string">Profile Picture</string>
+    <string name="profile_bio_string">Profile Biography</string>
+    <string name="discovery_range_string">Discovery Range</string>
+    <string name="discovery_range_calculated_string">Discovery Range</string>
+    <string name="discovery_types_string">Pet Types</string>
+    <string name="discovery_dog_string">Dogs</string>
+    <string name="discovery_cat_string">Cats</string>
+    <string name="discovery_other_string">Other</string>
     
 
 </resources>
