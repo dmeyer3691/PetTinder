@@ -2,6 +2,7 @@ package com.pettinder;
 
 import android.support.v7.app.ActionBarActivity;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -14,13 +15,20 @@ import android.widget.Button;
 public class MatchesActivity extends ActionBarActivity {
 
 	Intent settingsIntent, connectionIntent;
-	Button connectionButton;
+	Button connectionButton, searchButton;
 	
 	View.OnClickListener connection = (new View.OnClickListener() {
 		public void onClick(View v){
 			startActivity(connectionIntent);
 		}
 	});
+	
+	View.OnClickListener search = (new View.OnClickListener() {
+		public void onClick(View v){
+			//todo
+		}
+	});
+	
 	
     
     @Override
@@ -33,6 +41,12 @@ public class MatchesActivity extends ActionBarActivity {
         // Grab list of matches for current user from AWS and display as buttons with pictures
         connectionButton = (Button) findViewById(R.id.button1);
         connectionButton.setOnClickListener(connection);
+        searchButton = (Button) findViewById(R.id.searchButton);
+        searchButton.setOnClickListener(search);
+        // add matches picture to button
+        Drawable img = getResources().getDrawable(R.drawable.loudnoises);
+        img.setBounds(0, 0, 100, 100);
+        connectionButton.setCompoundDrawables(null, null, img, null);
     }
 
     
