@@ -14,4 +14,33 @@
         android:layout_height="wrap_content"
         android:text="@string/edit_profile_string" />
 
+    <ImageButton
+        android:id="@+id/profile_picture_edit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textView1"
+        android:layout_below="@+id/textView1"
+        android:contentDescription="@string/profile_picture_string" />
+    
+	<EditText
+        android:id="@+id/profile_bio_edit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/profile_picture_edit"
+        android:layout_below="@+id/profile_picture_edit"
+        android:layout_marginTop="35dp"
+        android:ems="10"
+        android:inputType="textMultiLine"
+        android:text="@string/profile_bio_string" />
+
+
+    <Spinner
+        android:id="@+id/gender_toggle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/profile_bio_edit"
+        android:layout_below="@+id/profile_bio_edit"
+        android:layout_marginTop="20dp"
+        android:text="Select" />
+
 </RelativeLayout>

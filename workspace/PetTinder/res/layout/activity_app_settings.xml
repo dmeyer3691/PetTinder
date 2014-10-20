@@ -14,4 +14,35 @@
         android:layout_height="wrap_content"
         android:text="@string/app_settings_string" />
 
+    <TextView
+        android:id="@+id/privacy_policy"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textView1"
+        android:layout_below="@+id/textView1" />
+    
+   <TextView
+        android:id="@+id/terms_of_service"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textView1"
+        android:layout_below="@+id/privacy_policy" />
+   
+   <Button
+       android:id="@+id/logout_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textView1"
+        android:layout_below="@+id/terms_of_service"
+        android:text="@string/logout_string" />
+   
+   <Button
+        android:id="@+id/delete_account_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textView1"
+        android:layout_below="@+id/logout_button"
+        android:text="@string/delete_account_string" />
+       
+
 </RelativeLayout>

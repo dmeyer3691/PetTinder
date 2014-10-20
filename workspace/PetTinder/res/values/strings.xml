@@ -32,6 +32,11 @@
     <string name="discovery_dog_string">Dogs</string>
     <string name="discovery_cat_string">Cats</string>
     <string name="discovery_other_string">Other</string>
-    
+    <string name="delete_account_string">Delete Account</string>
+    <string name="logout_string">Logout</string>
+    <string-array name="gender_array">
+        <item>Male</item>
+        <item>Female</item>
+    </string-array>
 
 </resources>

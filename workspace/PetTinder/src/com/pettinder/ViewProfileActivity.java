@@ -15,6 +15,7 @@ public class ViewProfileActivity extends ActionBarActivity {
 
 	Intent settingsIntent, editProfileIntent;
 	
+	//need to have better functionality for going back to 'parent' activity
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {

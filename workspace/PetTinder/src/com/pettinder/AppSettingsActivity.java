@@ -14,6 +14,21 @@ import android.widget.Button;
 public class AppSettingsActivity extends ActionBarActivity {
 
 	Intent settingsIntent;
+	Button logoutButton, deleteButton;
+	
+	View.OnClickListener delete = (new View.OnClickListener() {
+		public void onClick(View v){
+			// todo
+			
+		}
+	});
+	
+	View.OnClickListener logout = (new View.OnClickListener() {
+		public void onClick(View v){
+			// todo 
+			
+		}
+	});
 	
     
     @Override
@@ -22,9 +37,10 @@ public class AppSettingsActivity extends ActionBarActivity {
         setContentView(R.layout.activity_app_settings);
         //define intents
         settingsIntent = new Intent(this, SettingsActivity.class);
-
-        
-        // Grab list of matches for current user from AWS and display as buttons with pictures
+        deleteButton = (Button) findViewById(R.id.delete_account_button);
+        deleteButton.setOnClickListener(delete);
+        logoutButton = (Button) findViewById(R.id.logout_button);
+        logoutButton.setOnClickListener(logout);
     }
 
     
