@@ -13,6 +13,10 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
+        
+        <meta-data android:name="com.google.android.gms.version"
+        	android:value="6.1" />
+        
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name" >
@@ -29,6 +33,69 @@
             <meta-data
             	android:name="android.support.PARENT_ACTIVITY"
             	android:value="com.pettinder.MainActivity" />
+            
+        </activity>
+        <activity
+            android:name=".MatchesActivity"
+            android:label="@string/app_name"
+            android:parentActivityName=".DiscoveryActivity" >
+            <meta-data
+            	android:name="android.support.PARENT_ACTIVITY"
+            	android:value="com.pettinder.DiscoveryActivity" />
+            
+        </activity>
+        <activity
+            android:name=".SettingsActivity"
+            android:label="@string/app_name"
+            android:parentActivityName=".DiscoveryActivity" >
+            <meta-data
+            	android:name="android.support.PARENT_ACTIVITY"
+            	android:value="com.pettinder.DiscoveryActivity" />
+            
+        </activity>
+        <activity
+            android:name=".ViewProfileActivity"
+            android:label="@string/app_name"
+            android:parentActivityName=".DiscoveryActivity" >
+            <meta-data
+            	android:name="android.support.PARENT_ACTIVITY"
+            	android:value="com.pettinder.DiscoveryActivity" />
+            
+        </activity>
+        <activity
+            android:name=".DiscoveryPreferencesActivity"
+            android:label="@string/app_name"
+            android:parentActivityName=".SettingsActivity" >
+            <meta-data
+            	android:name="android.support.PARENT_ACTIVITY"
+            	android:value="com.pettinder.SettingsActivity" />
+            
+        </activity>
+        <activity
+            android:name=".AppSettingsActivity"
+            android:label="@string/app_name"
+            android:parentActivityName=".SettingsActivity" >
+            <meta-data
+            	android:name="android.support.PARENT_ACTIVITY"
+            	android:value="com.pettinder.SettingsActivity" />
+            
+        </activity>
+        <activity
+            android:name=".EditProfileActivity"
+            android:label="@string/app_name"
+            android:parentActivityName=".ViewProfileActivity" >
+            <meta-data
+            	android:name="android.support.PARENT_ACTIVITY"
+            	android:value="com.pettinder.ViewProfileActivity" />
+            
+        </activity>
+        <activity
+            android:name=".ConnectionActivity"
+            android:label="@string/app_name"
+            android:parentActivityName=".MatchesActivity" >
+            <meta-data
+            	android:name="android.support.PARENT_ACTIVITY"
+            	android:value="com.pettinder.MatchesActivity" />
             
         </activity>
     </application>
