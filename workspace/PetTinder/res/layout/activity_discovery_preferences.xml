@@ -48,7 +48,7 @@
         android:layout_alignLeft="@+id/checkBox00"
         android:layout_below="@+id/textView3"
         android:layout_marginTop="18dp"
-        android:text="@string/discovery_types_string"
+        android:text="@string/pref_discovery_types"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <CheckBox
@@ -57,7 +57,7 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/seekBar1"
         android:layout_below="@+id/TextView01"
-        android:text="@string/discovery_dog_string" />
+        android:text="@string/pref_dogs" />
 
     <CheckBox
         android:id="@+id/CheckBox02"
@@ -65,7 +65,7 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/CheckBox01"
         android:layout_below="@+id/CheckBox01"
-        android:text="@string/discovery_other_string" />
+        android:text="@string/pref_other" />
 
     <CheckBox
         android:id="@+id/CheckBox01"
@@ -73,6 +73,6 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/checkBox00"
         android:layout_below="@+id/checkBox00"
-        android:text="@string/discovery_cat_string" />
+        android:text="@string/pref_cats" />
 
 </RelativeLayout>

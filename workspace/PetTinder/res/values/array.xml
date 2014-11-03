@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <string-array name="pref_discovery_ranges">
+        <item>1 mile</item>
+        <item>5 miles</item>
+        <item>10 miles</item>
+        <item>25 miles</item>
+        <item>50 miles</item>
+    </string-array>
+    <string-array name="pref_discovery_ranges_values">
+        <item>1</item>
+        <item>5</item>
+        <item>10</item>
+        <item>25</item>
+        <item>50</item>
+    </string-array>
+    
+</resources>

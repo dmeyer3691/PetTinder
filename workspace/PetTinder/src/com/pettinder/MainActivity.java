@@ -2,6 +2,13 @@ package com.pettinder;
 
 
 
+import com.amazonaws.auth.CognitoCachingCredentialsProvider;
+import com.amazonaws.mobileconnectors.cognito.CognitoSyncManager;
+import com.amazonaws.mobileconnectors.cognito.Dataset;
+import com.amazonaws.regions.Regions;
+import com.facebook.AppEventsLogger;
+
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBarActivity;
 
 import android.content.Context;
@@ -104,6 +111,35 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
     	super.onResume();
     	locationManager.requestLocationUpdates(provider, 400, 1, this);
         Log.d("Checkpoint 3", "Called onResume");
+        
+
+
+        // Logs 'install' and 'app activate' App Events. Facebook
+        AppEventsLogger.activateApp(this);
+        
+        //AWS
+        /*
+        //initialize cognito client
+        CognitoCachingCredentialsProvider cognitoProvider = new CognitoCachingCredentialsProvider(
+        	    myActivity.getContext(), // get the context for the current activity
+        	    "951970281312",
+        	    "us-east-1:6032b334-1a37-4866-a6b9-af66fd72e2eb",
+        	    "YOUR UNAUTHENTICATED ARN HERE",
+        	    "arn:aws:iam::951970281312:role/Cognito_PetTinderUsersAuth_DefaultRole",
+        	    Regions.US_EAST_1
+        	);
+        
+        //store and sync 
+        CognitoSyncManager syncClient = new CognitoSyncManager(
+        		   myActivity.getContext(), 
+        		   "us-east-1:6032b334-1a37-4866-a6b9-af66fd72e2eb", 
+        		   Regions.US_EAST_1,
+        		   cognitoProvider);
+        		   
+        		//Dataset dataset = syncClient.openOrCreateDataset("myDataset");
+        		//dataset.put("myKey", "myValue");
+        		//dataset.synchronize(this, syncCallback);
+		*/
     }
     	 
     @Override
@@ -111,6 +147,9 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
     	super.onPause();
     	locationManager.removeUpdates(this);
         Log.d("Checkpoint 3", "Called onPause");
+
+        // Logs 'app deactivate' App Event. Facebook
+        AppEventsLogger.deactivateApp(this);
     }
     
     @Override

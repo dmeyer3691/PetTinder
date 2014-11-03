@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="facebook_app_id">363134427182519</string>
     <string name="app_name">PetTinder</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
@@ -28,10 +29,14 @@
     <string name="profile_bio_string">Profile Biography</string>
     <string name="discovery_range_string">Discovery Range</string>
     <string name="discovery_range_calculated_string">Discovery Range</string>
-    <string name="discovery_types_string">Pet Types</string>
-    <string name="discovery_dog_string">Dogs</string>
-    <string name="discovery_cat_string">Cats</string>
-    <string name="discovery_other_string">Other</string>
+    <string name="pref_discovery_range_default">10</string>
+    <string name="pref_discovery_types">Pet Types</string>
+    <string name="pref_dogs">Dogs</string>
+    <string name="pref_cats">Cats</string>
+    <string name="pref_other">Other</string>
+    <string name="pref_dogs_summ">Show dogs in discovery results</string>
+    <string name="pref_cats_summ">Show cats in discovery results</string>
+    <string name="pref_other_summ">Show other pets in discovery results</string>
     <string name="delete_account_string">Delete Account</string>
     <string name="logout_string">Logout</string>
     <string-array name="gender_array">
