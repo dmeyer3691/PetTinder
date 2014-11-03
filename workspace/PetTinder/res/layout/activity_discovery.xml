@@ -9,27 +9,29 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.pettinder.MainActivity" >
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/discoveryProfileLayout"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_weight="3"
         android:layout_gravity="center"
         android:orientation="vertical" >
-
+        
         <ImageView
             android:id="@+id/discoveryImage"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
             android:gravity="center"
             android:contentDescription="@string/discoveryImage"
             android:src="@drawable/loudnoises" />
+        <!-- Apparently nested weights cause 2^(depth) computations, but 2^2 is small -->
 
         <LinearLayout
             android:id="@+id/ProfileInfoLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/discoveryImage" >
+            android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/discoveryName"
@@ -43,7 +45,7 @@
                 android:gravity="end"
                 android:text="@string/discoveryBreed" />
         </LinearLayout>
-    </RelativeLayout>
+    </LinearLayout>
 
     <RelativeLayout
         android:id="@+id/discoveryChoicesLayout"

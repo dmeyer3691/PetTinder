@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-<fullyQualifiedTypeName name="com.pettinder.R.drawable"/>
+<fullyQualifiedTypeName name="android.view.View.OnClickListener"/>
 <fullyQualifiedTypeName name="com.pettinder.R.id"/>
+<fullyQualifiedTypeName name="android.preference.PreferenceFragment"/>
 </qualifiedTypeNameHistroy>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <ListPreference
+        android:key="prefDiscoveryRange"
+        android:title="discovery_range_string" />
+
+    <PreferenceCategory
+        android:title="@string/prefDiscoveryTypes"
+        android:key="prefDiscoveryTypes">
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="prefDogs"
+            android:title="@string/prefDogs"
+            android:summary="@string/prefDogsSumm" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="prefCats"
+            android:title="@string/prefCats"
+            android:summary="@string/prefCatsSumm" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="prefOther"
+            android:title="@string/prefOther"
+            android:summary="@string/prefOtherSumm" />
+    </PreferenceCategory>
+
+</PreferenceScreen>
