@@ -2,23 +2,34 @@ package com.pettinder;
 
 
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.mobileconnectors.cognito.CognitoSyncManager;
 import com.amazonaws.mobileconnectors.cognito.Dataset;
 import com.amazonaws.regions.Regions;
 import com.facebook.AppEventsLogger;
+import com.facebook.Session;
+import com.facebook.SessionState;
+import com.facebook.UiLifecycleHelper;
 
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBarActivity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.pm.Signature;
 
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -29,8 +40,10 @@ import android.widget.Toast;
 
 
 
-public class MainActivity extends ActionBarActivity implements LocationListener{
+public class MainActivity extends FragmentActivity implements LocationListener{
 
+	private static final String TAG = "MainActivity";
+	
 	
 	Button button1, button2;
     Intent discoveryIntent, settingsIntent;
@@ -38,6 +51,8 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
     private TextView longitudeField;
     private LocationManager locationManager;
     private String provider;
+    private UiLifecycleHelper uiHelper;
+
     
  // onClickListeners    
  	View.OnClickListener destroy = (new View.OnClickListener() {
@@ -51,13 +66,49 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
  		}
  	});
  	
-    
+ 	private void onSessionStateChange(Session session, SessionState state, Exception exception) {
+ 	    if (state.isOpened()) {
+ 	        Log.d(TAG, "Logged in...");
+ 	    } else if (state.isClosed()) {
+ 	        Log.d(TAG, "Logged out...");
+ 	    }
+ 	}
+ 	
+ 	private Session.StatusCallback callback = new Session.StatusCallback() {
+ 	    @Override
+ 	    public void call(Session session, SessionState state, Exception exception) {
+ 	        onSessionStateChange(session, state, exception);
+ 	    }
+ 	};
 	
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+    	
+
+        /*
+        if (savedInstanceState == null) {
+        	Log.d(TAG, "savedState=null");
+            // Add the fragment on initial activity setup
+            mainFragment = new MainFragment();
+            getSupportFragmentManager()
+            .beginTransaction()
+            .add(android.R.id.content, mainFragment)
+            .commit();
+        } else {
+            // Or set the fragment from restored state info
+            mainFragment = (MainFragment) getSupportFragmentManager()
+            .findFragmentById(android.R.id.content);
+        }
+        */
         setContentView(R.layout.activity_main);
+
+        
+        
+        uiHelper = new UiLifecycleHelper(this, callback);
+        uiHelper.onCreate(savedInstanceState);
         //define intents
         discoveryIntent = new Intent(this, DiscoveryActivity.class);
         settingsIntent = new Intent(this, SettingsActivity.class);
@@ -87,7 +138,7 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
         	latituteField.setText("Location not available");
         	longitudeField.setText("Location not available");
         }
-        Log.d("Checkpoint 3", "Called onCreate");
+        Log.d(TAG, "Called onCreate");
     }
 
     
@@ -97,20 +148,28 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
     	
     	
 
-        Log.d("Checkpoint 3", "Called onStart");
+        Log.d(TAG, "Called onStart");
     }
     
     @Override
     protected void onRestart(){
     	super.onRestart();
-        Log.d("Checkpoint 3", "Called onRestart");
+        Log.d(TAG, "Called onRestart");
     }
     
     @Override
     protected void onResume(){
     	super.onResume();
+    	Session session = Session.getActiveSession();
+        if (session != null &&
+               (session.isOpened() || session.isClosed()) ) {
+            onSessionStateChange(session, session.getState(), null);
+        }
+
+        uiHelper.onResume();
+
     	locationManager.requestLocationUpdates(provider, 400, 1, this);
-        Log.d("Checkpoint 3", "Called onResume");
+        Log.d(TAG, "Called onResume");
         
 
 
@@ -145,8 +204,10 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
     @Override
     protected void onPause(){
     	super.onPause();
+        uiHelper.onPause();
+
     	locationManager.removeUpdates(this);
-        Log.d("Checkpoint 3", "Called onPause");
+        Log.d(TAG, "Called onPause");
 
         // Logs 'app deactivate' App Event. Facebook
         AppEventsLogger.deactivateApp(this);
@@ -157,13 +218,15 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
     	
     	super.onStop();
 
-        Log.d("Checkpoint 3", "Called onStop");
+        Log.d(TAG, "Called onStop");
     }
 
     @Override
     protected void onDestroy(){
     	super.onDestroy();
-        Log.d("Checkpoint 3", "Called onDestroy");
+        uiHelper.onDestroy();
+
+        Log.d(TAG, "Called onDestroy");
     }
     
     @Override
