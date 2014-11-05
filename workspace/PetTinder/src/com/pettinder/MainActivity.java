@@ -4,6 +4,10 @@ package com.pettinder;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.mobileconnectors.cognito.CognitoSyncManager;
@@ -13,10 +17,18 @@ import com.facebook.AppEventsLogger;
 import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
+import com.parse.LogInCallback;
+import com.parse.Parse;
+import com.parse.ParseException;
+import com.parse.ParseFacebookUtils;
+import com.parse.ParseObject;
+import com.parse.ParseUser;
 
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBarActivity;
 
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -45,14 +57,14 @@ public class MainActivity extends FragmentActivity implements LocationListener{
 	private static final String TAG = "MainActivity";
 	
 	
-	Button button1, button2;
+	Button button1, button2, loginButton, logoutButton;
     Intent discoveryIntent, settingsIntent;
     private TextView latituteField;
     private TextView longitudeField;
     private LocationManager locationManager;
     private String provider;
     private UiLifecycleHelper uiHelper;
-
+	private Dialog progressDialog;
     
  // onClickListeners    
  	View.OnClickListener destroy = (new View.OnClickListener() {
@@ -66,6 +78,7 @@ public class MainActivity extends FragmentActivity implements LocationListener{
  		}
  	});
  	
+ 	/*
  	private void onSessionStateChange(Session session, SessionState state, Exception exception) {
  	    if (state.isOpened()) {
  	        Log.d(TAG, "Logged in...");
@@ -80,14 +93,20 @@ public class MainActivity extends FragmentActivity implements LocationListener{
  	        onSessionStateChange(session, state, exception);
  	    }
  	};
-	
+	*/
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
-    	
+        Parse.initialize(this, "bl9sFBxmrkDhNWSDxnlvbLIbeFrQ9kHUGEbBRI4a", "tCzPn6RbPx2ZJUmGc7AMb2eBoetXgO02A4jefTHp");
+		ParseFacebookUtils.initialize(getString(R.string.facebook_app_id));
 
+		/*
+        //test
+        ParseObject testObject = new ParseObject("TestObject");
+        testObject.put("foo", "bar");
+        testObject.saveInBackground();
+		 */
         /*
         if (savedInstanceState == null) {
         	Log.d(TAG, "savedState=null");
@@ -106,9 +125,10 @@ public class MainActivity extends FragmentActivity implements LocationListener{
         setContentView(R.layout.activity_main);
 
         
-        
+        /*
         uiHelper = new UiLifecycleHelper(this, callback);
         uiHelper.onCreate(savedInstanceState);
+        */
         //define intents
         discoveryIntent = new Intent(this, DiscoveryActivity.class);
         settingsIntent = new Intent(this, SettingsActivity.class);
@@ -121,6 +141,29 @@ public class MainActivity extends FragmentActivity implements LocationListener{
         button2.setOnClickListener(discovery);
         latituteField = (TextView) findViewById(R.id.TextView02);
         longitudeField = (TextView) findViewById(R.id.TextView04);
+        loginButton = (Button) findViewById(R.id.facebookLoginButton);
+		loginButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				onLoginButtonClicked();
+			}
+		});
+		logoutButton = (Button) findViewById(R.id.facebookLogoutButton);
+		logoutButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				onLogoutButtonClicked();
+			}
+		});
+		
+
+		// Check if there is a currently logged in user
+		// and it's linked to a Facebook account.
+		ParseUser currentUser = ParseUser.getCurrentUser();
+		if ((currentUser != null) && ParseFacebookUtils.isLinked(currentUser)) {
+			// Go to the user info activity
+			Log.d(TAG,"User already logged in to facebook");
+		}
 
         // Get the location manager
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -138,9 +181,48 @@ public class MainActivity extends FragmentActivity implements LocationListener{
         	latituteField.setText("Location not available");
         	longitudeField.setText("Location not available");
         }
+
         Log.d(TAG, "Called onCreate");
     }
 
+    @Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		ParseFacebookUtils.finishAuthentication(requestCode, resultCode, data);
+	}
+    
+    private void onLogoutButtonClicked() {
+		// Log the user out
+		ParseUser.logOut();
+		Log.d(TAG,"user logged out of facebook");
+    }
+    
+    private void onLoginButtonClicked() {
+		MainActivity.this.progressDialog = 
+				ProgressDialog.show(MainActivity.this, "", "Logging in...", true);
+		
+		List<String> permissions = Arrays.asList("public_profile", "email");
+		// NOTE: for extended permissions, like "user_about_me", your app must be reviewed by the Facebook team
+		// (https://developers.facebook.com/docs/facebook-login/permissions/)
+		
+		ParseFacebookUtils.logIn(permissions, this, new LogInCallback() {
+
+			@Override
+			public void done(ParseUser user, ParseException error) {
+				// TODO Auto-generated method stub
+				MainActivity.this.progressDialog.dismiss();
+				if (user == null) {
+					Log.d(TAG, "Uh oh. The user cancelled the Facebook login.");
+				} else if (user.isNew()) {
+					Log.d(TAG, "User signed up and logged in through Facebook!");
+					
+				} else {
+					Log.d(TAG, "User logged in through Facebook!");
+					
+				}
+			}
+		});
+	}
     
     @Override
     protected void onStart(){
@@ -160,6 +242,7 @@ public class MainActivity extends FragmentActivity implements LocationListener{
     @Override
     protected void onResume(){
     	super.onResume();
+    	/*
     	Session session = Session.getActiveSession();
         if (session != null &&
                (session.isOpened() || session.isClosed()) ) {
@@ -167,7 +250,7 @@ public class MainActivity extends FragmentActivity implements LocationListener{
         }
 
         uiHelper.onResume();
-
+    	 */
     	locationManager.requestLocationUpdates(provider, 400, 1, this);
         Log.d(TAG, "Called onResume");
         
@@ -197,15 +280,16 @@ public class MainActivity extends FragmentActivity implements LocationListener{
         		   
         		//Dataset dataset = syncClient.openOrCreateDataset("myDataset");
         		//dataset.put("myKey", "myValue");
-        		//dataset.synchronize(this, syncCallback);
-		*/
+        */		//dataset.synchronize(this, syncCallback);
+		
     }
     	 
     @Override
     protected void onPause(){
     	super.onPause();
+    	/*
         uiHelper.onPause();
-
+    	 */
     	locationManager.removeUpdates(this);
         Log.d(TAG, "Called onPause");
 
@@ -224,8 +308,9 @@ public class MainActivity extends FragmentActivity implements LocationListener{
     @Override
     protected void onDestroy(){
     	super.onDestroy();
+    	/*
         uiHelper.onDestroy();
-
+		*/
         Log.d(TAG, "Called onDestroy");
     }
     

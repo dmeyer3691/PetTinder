@@ -80,12 +80,30 @@
         </TextView>
     </LinearLayout>
     
-    <com.facebook.widget.LoginButton
+    <!-- <com.facebook.widget.LoginButton
         android:id="@+id/authButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="30dp"
+        />
+     -->
+    <Button
+        android:id="@+id/facebookLoginButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="30dp"
+        android:text="Login"
+        />
+    
+    <Button
+        android:id="@+id/facebookLogoutButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="30dp"
+        android:text="Logout"
         />
 
 </LinearLayout>
