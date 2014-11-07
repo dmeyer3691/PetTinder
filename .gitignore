@@ -1,0 +1,11 @@
+.metadata
+
+.DS_Store
+
+.classpath
+
+project.properties
+
+workspace/PetTinder/gen
+
+workspace/PetTinder/bin
