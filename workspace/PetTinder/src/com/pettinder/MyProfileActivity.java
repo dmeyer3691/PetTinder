@@ -11,18 +11,19 @@ import android.widget.Button;
 
 
 
-public class ViewProfileActivity extends ActionBarActivity {
+public class MyProfileActivity extends ActionBarActivity {
 
-	Intent settingsIntent;
+	Intent settingsIntent, editProfileIntent;
 	
 	//need to have better functionality for going back to 'parent' activity
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_view_profile);
+        setContentView(R.layout.activity_my_profile);
         //define intents
         settingsIntent = new Intent(this, SettingsActivity.class);
+        editProfileIntent = new Intent(this, EditProfileActivity.class);
        
     }
 
@@ -73,6 +74,9 @@ public class ViewProfileActivity extends ActionBarActivity {
         if (id == R.id.settings) {
         	startActivity(settingsIntent);
             return true;
+        }else if (id == R.id.edit_profile) {
+        	startActivity(editProfileIntent);
+        	return true;
         }
         return super.onOptionsItemSelected(item);
     }

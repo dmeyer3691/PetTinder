@@ -3,7 +3,13 @@ package com.pettinder;
 import java.util.Arrays;
 import java.util.List;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.facebook.AppEventsLogger;
+import com.facebook.Request;
+import com.facebook.Response;
+import com.facebook.model.GraphUser;
 
 import com.parse.LogInCallback;
 import com.parse.Parse;
@@ -94,10 +100,12 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
 					Log.d(TAG, "Uh oh. The user cancelled the Facebook login.");
 					Toast.makeText(getApplicationContext(), "Login Failed", Toast.LENGTH_LONG).show();
 				} else if (user.isNew()) {
+					makeMeRequest();
 					Log.d(TAG, "User signed up and logged in through Facebook!");
 					Toast.makeText(getApplicationContext(), "Logged In", Toast.LENGTH_LONG).show();
 					button2.setVisibility(View.VISIBLE);
 				} else {
+					makeMeRequest();
 					Log.d(TAG, "User logged in through Facebook!");
 					Toast.makeText(getApplicationContext(), "Logged In", Toast.LENGTH_LONG).show();
 					button2.setVisibility(View.VISIBLE);
@@ -105,6 +113,57 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
 			}
 		});
 	}
+    
+    private void makeMeRequest() {
+        Request request = Request.newMeRequest(ParseFacebookUtils.getSession(),
+                new Request.GraphUserCallback() {
+                    @Override
+                    public void onCompleted(GraphUser user, Response response) {
+                        if (user != null) { 
+                            // Create a JSON object to hold the profile info
+                            JSONObject userProfile = new JSONObject();
+                            try {                   
+                                // Populate the JSON object 
+                                userProfile.put("facebookId", user.getId());
+                                Log.d(TAG, user.getId());
+                                userProfile.put("name", user.getName());
+                                /*
+                                if (user.getLocation().getProperty("name") != null) {
+                                    userProfile.put("location", (String) user
+                                            .getLocation().getProperty("name"));    
+                                }                           
+                                if (user.getProperty("gender") != null) {
+                                    userProfile.put("gender",       
+                                            (String) user.getProperty("gender"));   
+                                }                           
+                                if (user.getBirthday() != null) {
+                                    userProfile.put("birthday",     
+                                            user.getBirthday());                    
+                                }                           
+                                if (user.getProperty("relationship_status") != null) {
+                                    userProfile                     
+                                        .put("relationship_status",                 
+                                            (String) user                                           
+                                                .getProperty("relationship_status"));                               
+                                }   
+                                */                        
+                                // Now add the data to the UI elements
+                                // ...
+                                
+                            } catch (JSONException e) {
+                                Log.d(TAG, "Error parsing returned user data.");
+                            }
+        
+                        } else if (response.getError() != null) {
+                            // handle error
+                        }                  
+                    }
+
+					             
+                });
+        request.executeAsync();
+     
+    }
     
     public ParseUser getCurrentUser()
     {
@@ -157,6 +216,7 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
 		currentUser = ParseUser.getCurrentUser();
 		if ((currentUser != null) && ParseFacebookUtils.isLinked(currentUser)) {
 			// Go to the user info activity
+			makeMeRequest();
 			Log.d(TAG,"User already logged in to facebook");
 			button2.setVisibility(View.VISIBLE);
 			Toast.makeText(getApplicationContext(), "Logged In", Toast.LENGTH_LONG).show();
