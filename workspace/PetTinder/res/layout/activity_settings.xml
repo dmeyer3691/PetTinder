@@ -21,7 +21,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/textView1"
-        android:text="@string/view_profile_string" />
+        android:text="@string/my_pet_profile_string" />
 
     <Button
         android:id="@+id/Button01"

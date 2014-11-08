@@ -1,5 +1,9 @@
 package com.pettinder;
 
+import com.parse.ParseFacebookUtils;
+import com.parse.ParseObject;
+import com.parse.ParseUser;
+
 import android.support.v7.app.ActionBarActivity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,15 +12,40 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 
 
 public class MyProfileActivity extends ActionBarActivity {
 
 	Intent settingsIntent, editProfileIntent;
-	
-	//need to have better functionality for going back to 'parent' activity
+	TextView petName, distance, petBio;
+	ImageView petPic;
+	ParseUser currentUser;
+	ParseObject petProfile;
+	private final String TAG = "MyProfileActivity";
     
+	private void getParseUserData(){
+		if (currentUser.has("myPetProfile")){
+			petProfile = (ParseObject) currentUser.get("myPetProfile");
+			Log.d(TAG, "retrieved petProfile");
+			if(petProfile.has("petName")){
+				petName.setText( (String) petProfile.get("petName"));
+			}
+			if(petProfile.has("location")){
+				//getLocation of pet profile, calculate how far away from user currently, display answer
+				//distance.setText( (String) petProfile.get("location"));
+			}
+			if(petProfile.has("petBio")){
+				petBio.setText( (String) petProfile.get("petBio"));
+			}
+		} else {
+			Log.d(TAG, "no profile available");
+		}
+		
+	}
+	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,7 +53,19 @@ public class MyProfileActivity extends ActionBarActivity {
         //define intents
         settingsIntent = new Intent(this, SettingsActivity.class);
         editProfileIntent = new Intent(this, EditProfileActivity.class);
-       
+        petName = (TextView) findViewById(R.id.petName);
+        distance = (TextView) findViewById(R.id.distance);
+        petBio = (TextView) findViewById(R.id.profileBio);
+        petPic = (ImageView) findViewById(R.id.petPic);
+        currentUser = ParseUser.getCurrentUser();
+        
+        if ((currentUser != null) && ParseFacebookUtils.isLinked(currentUser)) {
+        	//user logged in through facebook
+        	getParseUserData();
+		} else {
+			Log.d(TAG,"user not logged in");
+		}
+
     }
 
     

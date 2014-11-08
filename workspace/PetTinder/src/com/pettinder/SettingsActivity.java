@@ -42,7 +42,7 @@ public class SettingsActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         // define intents
-        viewProfileIntent = new Intent(this, ViewProfileActivity.class);
+        viewProfileIntent = new Intent(this, MyProfileActivity.class);
         discoveryPreferencesIntent = new Intent(this, DiscoveryPreferencesActivity.class);
         appSettingsIntent = new Intent(this, AppSettingsActivity.class);
         
