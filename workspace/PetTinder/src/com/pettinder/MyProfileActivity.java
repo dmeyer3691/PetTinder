@@ -1,5 +1,7 @@
 package com.pettinder;
 
+import com.parse.Parse;
+import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
@@ -20,26 +22,34 @@ import android.widget.TextView;
 public class MyProfileActivity extends ActionBarActivity {
 
 	Intent settingsIntent, editProfileIntent;
-	TextView petName, distance, petBio;
+	TextView petName, petAge, distance, petBio, aboutPet;
 	ImageView petPic;
 	ParseUser currentUser;
 	ParseObject petProfile;
 	private final String TAG = "MyProfileActivity";
     
 	private void getParseUserData(){
+
+
 		if (currentUser.has("myPetProfile")){
-			petProfile = (ParseObject) currentUser.get("myPetProfile");
-			Log.d(TAG, "retrieved petProfile");
+
 			if(petProfile.has("petName")){
-				petName.setText( (String) petProfile.get("petName"));
+				petName.setText(petProfile.getString("petName")+", ");
+				aboutPet.setText("About " + petProfile.getString("petName"));
+				Log.d(TAG, petProfile.getString("petName"));
 			}
-			if(petProfile.has("location")){
+			if(petProfile.has("petAge")){
+				petAge.setText(petProfile.getString("petAge"));
+			}
+			if(petProfile.has("petZip")){
 				//getLocation of pet profile, calculate how far away from user currently, display answer
 				//distance.setText( (String) petProfile.get("location"));
 			}
 			if(petProfile.has("petBio")){
-				petBio.setText( (String) petProfile.get("petBio"));
+				petBio.setText(petProfile.getString("petBio"));
 			}
+			Log.d(TAG, "Profile Loaded");
+
 		} else {
 			Log.d(TAG, "no profile available");
 		}
@@ -50,21 +60,29 @@ public class MyProfileActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_profile);
+        Parse.initialize(this, "bl9sFBxmrkDhNWSDxnlvbLIbeFrQ9kHUGEbBRI4a", "tCzPn6RbPx2ZJUmGc7AMb2eBoetXgO02A4jefTHp");
+        
         //define intents
         settingsIntent = new Intent(this, SettingsActivity.class);
         editProfileIntent = new Intent(this, EditProfileActivity.class);
         petName = (TextView) findViewById(R.id.petName);
+        petAge = (TextView) findViewById(R.id.petAge);
         distance = (TextView) findViewById(R.id.distance);
         petBio = (TextView) findViewById(R.id.profileBio);
         petPic = (ImageView) findViewById(R.id.petPic);
+        aboutPet = (TextView) findViewById(R.id.bio);
         currentUser = ParseUser.getCurrentUser();
         
-        if ((currentUser != null) && ParseFacebookUtils.isLinked(currentUser)) {
-        	//user logged in through facebook
-        	getParseUserData();
-		} else {
-			Log.d(TAG,"user not logged in");
+        try {
+			petProfile = currentUser.getParseObject("myPetProfile").fetchIfNeeded();
+			Log.d(TAG, "retrieved petProfile");
+
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			Log.d(TAG,"error fetching");
 		}
+        
 
     }
 
@@ -82,6 +100,12 @@ public class MyProfileActivity extends ActionBarActivity {
     @Override
     protected void onResume(){
     	super.onResume();
+    	if ((currentUser != null) && ParseFacebookUtils.isLinked(currentUser)) {
+        	//user logged in through facebook
+        	getParseUserData();
+		} else {
+			Log.d(TAG,"user not logged in");
+		}
     }
     
     @Override
@@ -102,7 +126,7 @@ public class MyProfileActivity extends ActionBarActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.view_profile_menu, menu);
+        getMenuInflater().inflate(R.menu.my_profile_menu, menu);
         return true;
     }
 

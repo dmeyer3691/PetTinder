@@ -40,7 +40,7 @@
     <string name="pref_other_summ">Show other pets in discovery results</string>
     <string name="delete_account_string">Delete Account</string>
     <string name="logout_string">Logout</string>
-    <string name="pet_name_string">Pet Name, Pet Age</string>
+    <string name="pet_name_string">Pet Name</string>
     <string name="bio_string">About Pet Name</string>
     <string name="distance_string">X Miles Away</string>
     <string-array name="gender_array">

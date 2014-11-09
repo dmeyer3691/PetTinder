@@ -1,5 +1,7 @@
 package com.pettinder;
 
+import com.parse.Parse;
+import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
@@ -19,6 +21,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 
 
@@ -41,28 +44,57 @@ public class EditProfileActivity extends ActionBarActivity implements OnItemSele
 	});
     
 	private void saveChanges(){
-		
+		if (!currentUser.has("myPetProfile")){
+			petProfile = new ParseObject("myPetProfile");
+		}
+		if (petName.getText().toString().equals("")){
+			petProfile.put("petName", petName.getHint().toString());
+			Log.d(TAG, petName.getText().toString());
+		}else{
+			petProfile.put("petName", petName.getText().toString());
+		}
+		if (petAge.getText().toString().equals("")){
+			petProfile.put("petAge", petAge.getHint().toString());
+		}else{
+			petProfile.put("petAge", petAge.getText().toString());
+		}
+		if (petZip.getText().toString().equals("")){
+			petProfile.put("petZip", petZip.getHint());
+		}else{
+			petProfile.put("petZip", petZip.getText().toString());
+		}
+		if (petBio.getText().toString().equals("")){
+			petProfile.put("petBio", petBio.getHint().toString());
+		} else {
+			petProfile.put("petBio", petBio.getText().toString());
+		}
+		petProfile.saveInBackground();
+		currentUser.put("myPetProfile", petProfile);
+		currentUser.saveInBackground();
+		Log.d(TAG, "SAVED");
+		Toast.makeText(this, "Profile Saved", 0).show();
+
 		
 	}
 	
 	private void getParseUserData(){
+
+
 		if (currentUser.has("myPetProfile")){
-			petProfile = (ParseObject) currentUser.get("myPetProfile");
-			Log.d(TAG, "retrieved petProfile");
+			
 			if(petProfile.has("petName")){
-				petName.setText( (String) petProfile.get("petName"));
+				petName.setHint(petProfile.getString("petName"));
 			}
 			if(petProfile.has("petAge")){
-				petAge.setText( (String) petProfile.get("petAge"));
+				petAge.setHint(petProfile.getString("petAge"));
 			}
 			if(petProfile.has("petZip")){
-				//getLocation of pet profile, calculate how far away from user currently, display answer
-				//distance.setText( (String) petProfile.get("location"));
+				petZip.setHint(petProfile.getString("petZip"));
 			}
 			if(petProfile.has("petBio")){
-				petBio.setText( (String) petProfile.get("petBio"));
+				petBio.setHint(petProfile.getString("petBio"));
 			}
-			if(petProfile.has("gender")){
+			if(petProfile.has("petGender")){
 				String gender = (String) petProfile.get("petGender");
 				if (gender.equals("Male")){
 					genderSelection.setSelection(0);
@@ -70,6 +102,7 @@ public class EditProfileActivity extends ActionBarActivity implements OnItemSele
 					genderSelection.setSelection(1);
 				}
 			}
+			Log.d(TAG, "Profile Loaded");
 		} else {
 			Log.d(TAG, "no profile available");
 		}
@@ -81,6 +114,9 @@ public class EditProfileActivity extends ActionBarActivity implements OnItemSele
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
+        Parse.initialize(this, "bl9sFBxmrkDhNWSDxnlvbLIbeFrQ9kHUGEbBRI4a", "tCzPn6RbPx2ZJUmGc7AMb2eBoetXgO02A4jefTHp");
+        
+        
         //define intents
         settingsIntent = new Intent(this, SettingsActivity.class);
         // make image button display users profile picture
@@ -103,13 +139,17 @@ public class EditProfileActivity extends ActionBarActivity implements OnItemSele
         
         //user specific stuff
         currentUser = ParseUser.getCurrentUser();
-        
-        if ((currentUser != null) && ParseFacebookUtils.isLinked(currentUser)) {
-        	//user logged in through facebook
-        	getParseUserData();
-		} else {
-			Log.d(TAG,"user not logged in");
+        try {
+			petProfile = currentUser.getParseObject("myPetProfile").fetchIfNeeded();
+			Log.d(TAG, "retrieved petProfile");
+
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			Log.d(TAG,"error fetching");
 		}
+
+        
     }
 
     
@@ -126,11 +166,18 @@ public class EditProfileActivity extends ActionBarActivity implements OnItemSele
     @Override
     protected void onResume(){
     	super.onResume();
+    	if ((currentUser != null) && ParseFacebookUtils.isLinked(currentUser)) {
+        	//user logged in through facebook
+        	getParseUserData();
+		} else {
+			Log.d(TAG,"user not logged in");
+		}
     }
     
     @Override
     protected void onPause(){
     	super.onPause();
+    	saveChanges();
     }
     
     @Override
@@ -148,7 +195,7 @@ public class EditProfileActivity extends ActionBarActivity implements OnItemSele
         // Inflate the menu; this adds items to the action bar if it is present.
        
     	//shoulnd't need this here
-    	//getMenuInflater().inflate(R.menu.view_profile_menu, menu);
+    	getMenuInflater().inflate(R.menu.edit_profile_menu, menu);
         return true;
     }
 
@@ -172,6 +219,8 @@ public class EditProfileActivity extends ActionBarActivity implements OnItemSele
 	public void onItemSelected(AdapterView<?> parent, View view, int pos,
 			long id) {
 		String selection = (String) parent.getItemAtPosition(pos);
+		Log.d(TAG, selection);
+		petProfile.put("petGender", selection);
 		//store setting based on selection
 		
 	}

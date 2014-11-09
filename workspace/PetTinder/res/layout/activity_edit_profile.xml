@@ -26,7 +26,7 @@
 	       android:layout_weight="1"
 	       android:layout_gravity="left"
 	       android:inputType="text"
-	       android:text="Name" />
+	       android:hint="Name" />
         
         <EditText
 	       android:id="@+id/pet_age_edit"
@@ -35,7 +35,7 @@
 	       android:layout_weight="1"
 	       android:layout_gravity="right"
 	       android:inputType="number"
-	       android:text="Age" />
+	       android:hint="Age" />
         
     </LinearLayout>
     
@@ -50,8 +50,8 @@
 	       android:layout_height="wrap_content"
 	       android:layout_weight="1"
 	       android:layout_gravity="left"
-	       android:inputType="text"
-	       android:text="Zip Code" />
+	       android:inputType="number"
+	       android:hint="Zip Code" />
 
         <Spinner
 	        android:id="@+id/gender_toggle"
@@ -71,7 +71,7 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="textMultiLine"
-        android:text="@string/profile_bio_string" />
+        android:hint="@string/profile_bio_string" />
 
 
 </LinearLayout>
