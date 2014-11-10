@@ -1,15 +1,27 @@
 package com.pettinder;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
 import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
+import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 
 import android.support.v7.app.ActionBarActivity;
+import android.app.Activity;
 import android.content.ClipData.Item;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,6 +32,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -33,15 +46,35 @@ public class EditProfileActivity extends ActionBarActivity implements OnItemSele
 	EditText petBio, petName, petAge, petZip;
 	ParseUser currentUser;
 	ParseObject petProfile;
+	ParseFile profilePicture;
+	BitmapDrawable imageBitmap;
 	private final String TAG = "EditProfileActivity";
+    private static final int GET_FROM_GALLERY = 1;
+
+    
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+
+        //Detects request codes
+        if(requestCode==GET_FROM_GALLERY && resultCode == Activity.RESULT_OK) {
+            Uri selectedImage = data.getData();
+            Bitmap bitmap = null;
+            try {
+                    bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
+                    imageBitmap = new BitmapDrawable(this.getResources(), bitmap);
+                    profileButton.setImageDrawable(imageBitmap);
+            } catch (FileNotFoundException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+            } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+            }
+        }
+    }
 	
-	
-	View.OnClickListener profile = (new View.OnClickListener() {
-		public void onClick(View v){
-			// todo - make this open dialog to select picture from phones camera roll
-			
-		}
-	});
     
 	private void saveChanges(){
 		if (!currentUser.has("myPetProfile")){
@@ -68,6 +101,22 @@ public class EditProfileActivity extends ActionBarActivity implements OnItemSele
 		} else {
 			petProfile.put("petBio", petBio.getText().toString());
 		}
+		
+	    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+	    imageBitmap.getBitmap().compress(Bitmap.CompressFormat.JPEG, 100, stream);
+        byte[] bytes = stream.toByteArray();
+        if (bytes != null){
+            profilePicture = new ParseFile("profilePicture.jpg", bytes);
+        }
+
+		try {
+			profilePicture.save();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			Log.d(TAG,"picture failed saving");
+		}
+		petProfile.put("profilePicture", profilePicture);
 		petProfile.saveInBackground();
 		currentUser.put("myPetProfile", petProfile);
 		currentUser.saveInBackground();
@@ -102,6 +151,19 @@ public class EditProfileActivity extends ActionBarActivity implements OnItemSele
 					genderSelection.setSelection(1);
 				}
 			}
+			if(petProfile.has("profilePicture")){
+				profilePicture = petProfile.getParseFile("profilePicture");
+				byte[] data;
+				try {
+					data = profilePicture.getData();
+					imageBitmap = new BitmapDrawable(this.getResources(), BitmapFactory.decodeByteArray(data, 0, data.length));
+					profileButton.setImageDrawable(imageBitmap);
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					Log.d(TAG, "Error loading image");
+					e.printStackTrace();
+				}
+			}
 			Log.d(TAG, "Profile Loaded");
 		} else {
 			Log.d(TAG, "no profile available");
@@ -121,13 +183,14 @@ public class EditProfileActivity extends ActionBarActivity implements OnItemSele
         settingsIntent = new Intent(this, SettingsActivity.class);
         // make image button display users profile picture
         profileButton = (ImageButton) findViewById(R.id.profile_picture_edit);
-        profileButton.setOnClickListener(profile);
-        profileButton.setImageResource(R.drawable.loudnoises);
+        imageBitmap = (BitmapDrawable) getResources().getDrawable(R.drawable.loudnoises);
+        profileButton.setImageDrawable(imageBitmap);
         // profileButton.setImageBitmap(bm); //need to define bm
         petBio = (EditText) findViewById(R.id.profile_bio_edit);
         petName = (EditText) findViewById(R.id.pet_name_edit);
         petAge = (EditText) findViewById(R.id.pet_age_edit);
         petZip = (EditText) findViewById(R.id.pet_zip_edit);
+
         
         //populate gender selection spinner options
         genderSelection = (Spinner) findViewById(R.id.gender_toggle);
@@ -136,11 +199,21 @@ public class EditProfileActivity extends ActionBarActivity implements OnItemSele
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         genderSelection.setAdapter(adapter);
         genderSelection.setOnItemSelectedListener(this);
+        profileButton.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				startActivityForResult(new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI), GET_FROM_GALLERY);
+				
+			}
+		});
+        
         
         //user specific stuff
         currentUser = ParseUser.getCurrentUser();
         try {
 			petProfile = currentUser.getParseObject("myPetProfile").fetchIfNeeded();
+			profilePicture = petProfile.getParseFile("profilePicture");
 			Log.d(TAG, "retrieved petProfile");
 
 		} catch (ParseException e) {
@@ -177,7 +250,7 @@ public class EditProfileActivity extends ActionBarActivity implements OnItemSele
     @Override
     protected void onPause(){
     	super.onPause();
-    	saveChanges();
+    	//saveChanges();
     }
     
     @Override
