@@ -6,19 +6,19 @@
 
 project.properties
 
-workspace/PetTinder/gen
+workspace/PetTinder/gen/**
 
-workspace/PetTinder/bin
+workspace/PetTinder/bin/**
 
-workspace/appcompat_v7/gen
+workspace/appcompat_v7/gen/**
 
-workspace/appcompat_v7/bin
+workspace/appcompat_v7/bin/**
 
-workspace/FacebookSDK/gen
+workspace/FacebookSDK/gen/**
 
-workspace/FacebookSDK/bin
+workspace/FacebookSDK/bin/**
 
-workspace/google-play-services_lib/gen
+workspace/google-play-services_lib/gen/**
 
-workspace/google-play-services_lib/bin
+workspace/google-play-services_lib/bin/**
 
