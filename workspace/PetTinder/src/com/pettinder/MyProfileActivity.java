@@ -18,7 +18,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 
-
 public class MyProfileActivity extends ActionBarActivity {
 
 	Intent settingsIntent, editProfileIntent;

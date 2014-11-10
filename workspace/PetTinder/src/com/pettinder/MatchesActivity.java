@@ -8,60 +8,94 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.ListView;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Toast;
+import com.parse.Parse;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseUser;
+import com.parse.ParseQuery;
+import com.parse.FindCallback;
+import java.util.ArrayList;
+import java.util.List;
 
-
-
-public class MatchesActivity extends ActionBarActivity implements View.OnClickListener {
+/*
+ * Code adapted from:
+ * https://www.sinch.com/tutorials/android-messaging-tutorial-using-sinch-and-parse/
+ */
+public class MatchesActivity extends ActionBarActivity {
 
 	Button connectionButton, searchButton;
-	View matchesList;
-	int numMatches;
-	
-	public void onClick(View v) {
-		switch (v.getId()) {
-		case R.id.searchButton:
-			break;
-		default: // One of the connection buttons
-			Intent connectionIntent = new Intent(this, ConnectionActivity.class);
-			for (int i = 0; i < ((ViewGroup) matchesList).getChildCount(); i++) {
-				if (v.getId() == ((ViewGroup) matchesList).getChildAt(i).getId()){
-					// Attach some identifier for the match to the intent
-					connectionIntent.putExtra("placeholderKey",  -1);
-				}
-			}
-			startActivity(connectionIntent);
-			break;
-		}
+	ListView matchesListView;
+	ArrayList<String> matches;
+
+	public void openConversation(ArrayList<String> matches, int pos) {
+	    ParseQuery<ParseUser> query = ParseUser.getQuery();
+	    query.whereEqualTo("username", matches.get(pos));
+	    query.findInBackground(new FindCallback<ParseUser>() {
+	       public void done(List<ParseUser> user, ParseException e) {
+	           if (e == null) {
+	        	   Intent intent = new Intent(getApplicationContext(), MessagingActivity.class);
+	               intent.putExtra("RECIPIENT_ID", user.get(0).getObjectId());
+	               startActivity(intent);
+	           } else {
+	               Toast.makeText(getApplicationContext(),
+	                   "Error finding that user",
+	                       Toast.LENGTH_SHORT).show();
+	           }
+	       }
+	    });
 	}
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Drawable img;
-        Button cButton;
         setContentView(R.layout.activity_matches);
-        matchesList = findViewById(R.id.matchesList);
-        // Set listener for search button
-        searchButton = (Button) findViewById(R.id.searchButton);
-        searchButton.setOnClickListener(this);
-        // Assemble sample connection button
-        connectionButton = (Button) findViewById(R.id.button1);
-        connectionButton.setOnClickListener(this);
-        img = getResources().getDrawable(R.drawable.loudnoises);
-        img.setBounds(0, 0, 100, 100);
-        connectionButton.setCompoundDrawables(null, null, img, null);
-        // Grab list of matches for current user from AWS and display as buttons with pictures
-        numMatches = 0;
-        for (int i = 0; i < numMatches; i++) {
-        	// Create new button, add into matchesList view
-        	cButton = new Button(this);
-        	cButton.setOnClickListener(this);
-        	img = getResources().getDrawable(R.drawable.loudnoises);
-            img.setBounds(0, 0, 100, 100);
-            cButton.setCompoundDrawables(null, null, img, null);
-        }
+        Parse.initialize(this, "bl9sFBxmrkDhNWSDxnlvbLIbeFrQ9kHUGEbBRI4a", "tCzPn6RbPx2ZJUmGc7AMb2eBoetXgO02A4jefTHp");
+        // Start the sinch messaging service
+        final Intent serviceIntent = new Intent(getApplicationContext(), MessageService.class);
+        startService(serviceIntent);
+        
+        ParseQuery<ParseUser> query = ParseUser.getQuery();
+        // match logic
+        // query.where...
+        query.findInBackground(new FindCallback<ParseUser>() {
+        	public void done(List<ParseUser> matchList, com.parse.ParseException e) {
+        		if (e == null) {
+        	        matches = new ArrayList<String>();
+        			for (int i=0; i<matchList.size(); i++) {
+        				matches.add(matchList.get(i).getUsername().toString());
+        			}
+        			ArrayAdapter<String> matchesArrayAdapter =
+        					new ArrayAdapter<String>(getApplicationContext(),
+        							R.layout.match_list_item, matches);
+        	        matchesListView = (ListView) findViewById(R.id.matchesListView);
+        			matchesListView.setAdapter(matchesArrayAdapter);
+        			
+        			matchesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        				@Override
+        				public void onItemClick(AdapterView<?> a, View v, int i, long l) {
+        					openConversation(matches, i);
+        				}
+        			});
+        			
+        		} else {
+        			Toast.makeText(getApplicationContext(),
+        	                "Error loading user list",
+        	                    Toast.LENGTH_LONG).show();
+        		}
+}
+        });
+        
+        
+        
+        //Drawable img;
+        //img = getResources().getDrawable(R.drawable.loudnoises);
+        //img.setBounds(0, 0, 100, 100);
+        //connectionButton.setCompoundDrawables(null, null, img, null);
     }
 
     
@@ -92,6 +126,7 @@ public class MatchesActivity extends ActionBarActivity implements View.OnClickLi
 
     @Override
     protected void onDestroy(){
+        stopService(new Intent(this, MessageService.class));
     	super.onDestroy();
     }
     

@@ -43,9 +43,13 @@
     <string name="pet_name_string">Pet Name</string>
     <string name="bio_string">About Pet Name</string>
     <string name="distance_string">X Miles Away</string>
+    <string name="message_elipses">...</string>
+
     <string-array name="gender_array">
         <item>Male</item>
         <item>Female</item>
     </string-array>
+
+    <string name="title_activity_messaging">MessagingActivity</string>
 
 </resources>

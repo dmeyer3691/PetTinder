@@ -18,7 +18,6 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
 
-
 public class ConnectionActivity extends ActionBarActivity {
 
 	Intent settingsIntent, viewProfileIntent;
