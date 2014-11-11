@@ -10,7 +10,6 @@ import android.view.View;
 import android.widget.Button;
 
 
-
 public class SettingsActivity extends ActionBarActivity {
 
 	Button viewProfileButton, discoveryPreferencesButton, appSettingsButton, shareButton;

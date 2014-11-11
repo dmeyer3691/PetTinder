@@ -37,7 +37,6 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 
-
 public class EditProfileActivity extends ActionBarActivity implements OnItemSelectedListener {
 
 	Intent settingsIntent;

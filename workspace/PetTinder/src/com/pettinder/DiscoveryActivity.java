@@ -13,7 +13,6 @@ import android.widget.TextView;
 import android.widget.ImageButton;
 
 
-
 public class DiscoveryActivity extends ActionBarActivity {
 
     Intent matchesIntent, settingsIntent;

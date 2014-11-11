@@ -36,7 +36,6 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
 public class MainActivity extends ActionBarActivity implements LocationListener{
 
 	private static final String TAG = "MainActivity";

@@ -22,7 +22,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-
 public class AppSettingsActivity extends ActionBarActivity {
 
 	Intent settingsIntent, mainIntent;
