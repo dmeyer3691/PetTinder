@@ -1,14 +1,24 @@
 package com.pettinder;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
 import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
+import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 
 import android.support.v7.app.ActionBarActivity;
+import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,8 +35,11 @@ public class MyProfileActivity extends ActionBarActivity {
 	ImageView petPic;
 	ParseUser currentUser;
 	ParseObject petProfile;
+	ParseFile profilePicture;
+	BitmapDrawable imageBitmap;
 	private final String TAG = "MyProfileActivity";
-    
+	
+	
 	private void getParseUserData(){
 
 
@@ -47,6 +60,19 @@ public class MyProfileActivity extends ActionBarActivity {
 			if(petProfile.has("petBio")){
 				petBio.setText(petProfile.getString("petBio"));
 			}
+			if(petProfile.has("profilePicture")){
+				profilePicture = petProfile.getParseFile("profilePicture");
+				byte[] data;
+				try {
+					data = profilePicture.getData();
+					imageBitmap = new BitmapDrawable(this.getResources(), BitmapFactory.decodeByteArray(data, 0, data.length));
+					petPic.setImageDrawable(imageBitmap);
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					Log.d(TAG, "Error loading image");
+					e.printStackTrace();
+				}
+			}
 			Log.d(TAG, "Profile Loaded");
 
 		} else {
@@ -54,6 +80,7 @@ public class MyProfileActivity extends ActionBarActivity {
 		}
 		
 	}
+	
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +99,8 @@ public class MyProfileActivity extends ActionBarActivity {
         aboutPet = (TextView) findViewById(R.id.bio);
         currentUser = ParseUser.getCurrentUser();
         
+
+        
         try {
 			petProfile = currentUser.getParseObject("myPetProfile").fetchIfNeeded();
 			Log.d(TAG, "retrieved petProfile");
@@ -84,6 +113,7 @@ public class MyProfileActivity extends ActionBarActivity {
         
 
     }
+
 
     
     @Override
