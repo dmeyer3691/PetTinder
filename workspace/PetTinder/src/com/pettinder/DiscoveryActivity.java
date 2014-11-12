@@ -15,16 +15,10 @@ import android.widget.ImageButton;
 
 public class DiscoveryActivity extends ActionBarActivity {
 
-    Intent matchesIntent, settingsIntent;
+    Intent matchesIntent, settingsIntent, viewProfileIntent;
     
     
-    /*
-	View.OnClickListener matches = (new View.OnClickListener() {
-		public void onClick(View v){
-			startActivity(matchesIntent);
-		}
-	});
-	*/
+
     private int profileNum = 0;
     
     // Fetch the next discovery profile, updating the layout
@@ -74,6 +68,7 @@ public class DiscoveryActivity extends ActionBarActivity {
         //define intents
         matchesIntent = new Intent(this, MatchesActivity.class);
         settingsIntent = new Intent(this, SettingsActivity.class);
+        viewProfileIntent = new Intent(this, ViewProfileActivity.class);
         
         // Obtain the first profile
         getProfile();
@@ -94,7 +89,8 @@ public class DiscoveryActivity extends ActionBarActivity {
         ImageButton moreButton = (ImageButton) findViewById(R.id.discoveryMore);
         moreButton.setOnClickListener(new ImageButton.OnClickListener() {
            	public void onClick(View v) {
-           		// Fetch rest of profile (or whatever that button does)
+           		//probably to intent.putExtra(something) to know which profile to load in ViewProfileActivity
+           		startActivity(viewProfileIntent);
            	}
         });
 

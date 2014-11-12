@@ -56,6 +56,8 @@ public class SettingsActivity extends ActionBarActivity {
         appSettingsButton.setOnClickListener(appSettings);
         shareButton = (Button) findViewById(R.id.Button03);
         shareButton.setOnClickListener(share);
+        //take this out once if we have sharing functionality
+        shareButton.setVisibility(View.INVISIBLE);
     }
 
     

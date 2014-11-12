@@ -47,6 +47,7 @@ public class EditProfileActivity extends ActionBarActivity implements OnItemSele
 	ParseObject petProfile;
 	ParseFile profilePicture;
 	BitmapDrawable imageBitmap;
+	String petGender;
 	private final String TAG = "EditProfileActivity";
     private static final int GET_FROM_GALLERY = 1;
 
@@ -76,7 +77,7 @@ public class EditProfileActivity extends ActionBarActivity implements OnItemSele
 	
     
 	private void saveChanges(){
-		if (!currentUser.has("myPetProfile")){
+		if (petProfile== null){
 			petProfile = new ParseObject("myPetProfile");
 		}
 		if (petName.getText().toString().equals("")){
@@ -100,6 +101,10 @@ public class EditProfileActivity extends ActionBarActivity implements OnItemSele
 		} else {
 			petProfile.put("petBio", petBio.getText().toString());
 		}
+		if (!petGender.equals(null)){
+			petProfile.put("petGender", petGender);
+		}
+
 		
 	    ByteArrayOutputStream stream = new ByteArrayOutputStream();
 	    imageBitmap.getBitmap().compress(Bitmap.CompressFormat.JPEG, 100, stream);
@@ -128,7 +133,7 @@ public class EditProfileActivity extends ActionBarActivity implements OnItemSele
 	private void getParseUserData(){
 
 
-		if (currentUser.has("myPetProfile")){
+		if (currentUser.has("myPetProfile") && (petProfile!= null)){
 			
 			if(petProfile.has("petName")){
 				petName.setHint(petProfile.getString("petName"));
@@ -143,10 +148,10 @@ public class EditProfileActivity extends ActionBarActivity implements OnItemSele
 				petBio.setHint(petProfile.getString("petBio"));
 			}
 			if(petProfile.has("petGender")){
-				String gender = (String) petProfile.get("petGender");
-				if (gender.equals("Male")){
+				petGender = (String) petProfile.get("petGender");
+				if (petGender.equals("Male")){
 					genderSelection.setSelection(0);
-				} else if (gender.equals("Female")){
+				} else if (petGender.equals("Female")){
 					genderSelection.setSelection(1);
 				}
 			}
@@ -210,16 +215,7 @@ public class EditProfileActivity extends ActionBarActivity implements OnItemSele
         
         //user specific stuff
         currentUser = ParseUser.getCurrentUser();
-        try {
-			petProfile = currentUser.getParseObject("myPetProfile").fetchIfNeeded();
-			profilePicture = petProfile.getParseFile("profilePicture");
-			Log.d(TAG, "retrieved petProfile");
-
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			Log.d(TAG,"error fetching");
-		}
+        
 
         
     }
@@ -240,6 +236,21 @@ public class EditProfileActivity extends ActionBarActivity implements OnItemSele
     	super.onResume();
     	if ((currentUser != null) && ParseFacebookUtils.isLinked(currentUser)) {
         	//user logged in through facebook
+    		try {
+            	if(currentUser.has("myPetProfile")){
+            		petProfile = currentUser.getParseObject("myPetProfile").fetchIfNeeded();
+        			profilePicture = petProfile.getParseFile("profilePicture");	
+            	}
+    			
+    			Log.d(TAG, "retrieved petProfile");
+
+    		} catch (ParseException e) {
+    			// TODO Auto-generated catch block
+    			e.printStackTrace();
+    			Log.d(TAG,"error fetching");
+    		}
+    		
+    		
         	getParseUserData();
 		} else {
 			Log.d(TAG,"user not logged in");
@@ -290,9 +301,8 @@ public class EditProfileActivity extends ActionBarActivity implements OnItemSele
 	@Override
 	public void onItemSelected(AdapterView<?> parent, View view, int pos,
 			long id) {
-		String selection = (String) parent.getItemAtPosition(pos);
-		Log.d(TAG, selection);
-		petProfile.put("petGender", selection);
+		petGender = (String) parent.getItemAtPosition(pos);
+		Log.d(TAG, petGender);
 		//store setting based on selection
 		
 	}

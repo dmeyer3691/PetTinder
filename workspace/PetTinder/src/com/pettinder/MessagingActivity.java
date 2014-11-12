@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -42,7 +43,8 @@ public class MessagingActivity extends Activity {
     private String currentUserId;
     private ServiceConnection serviceConnection = new MyServiceConnection();
     private MessageClientListener messageClientListener = new MyMessageClientListener();
-
+    private final static String TAG = "MessagingActivity";
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -129,6 +131,7 @@ public class MessagingActivity extends Activity {
         public void onMessageFailed(MessageClient client, Message message,
                                     MessageFailureInfo failureInfo) {
             Toast.makeText(MessagingActivity.this, "Message failed to send.", Toast.LENGTH_LONG).show();
+            Log.d(TAG, failureInfo.toString());
         }
 
         @Override

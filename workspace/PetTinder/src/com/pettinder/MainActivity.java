@@ -175,12 +175,7 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
         Parse.initialize(this, "bl9sFBxmrkDhNWSDxnlvbLIbeFrQ9kHUGEbBRI4a", "tCzPn6RbPx2ZJUmGc7AMb2eBoetXgO02A4jefTHp");
 		ParseFacebookUtils.initialize(getString(R.string.facebook_app_id));
 
-		/*
-        //test
-        ParseObject testObject = new ParseObject("TestObject");
-        testObject.put("foo", "bar");
-        testObject.saveInBackground();
-		 */
+		
         setContentView(R.layout.activity_main);
         
         //define intents
@@ -188,8 +183,11 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
         settingsIntent = new Intent(this, SettingsActivity.class);
         
     	// register buttons
+        //probably remove this button
     	button1 = (Button) findViewById(R.id.button1);
     	button1.setOnClickListener(destroy);
+    	button1.setVisibility(View.INVISIBLE);
+    	
         button2 = (Button) findViewById(R.id.button2);
         button2.setOnClickListener(discovery);
         button2.setVisibility(View.INVISIBLE);

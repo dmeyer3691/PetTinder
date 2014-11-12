@@ -43,7 +43,7 @@ public class MyProfileActivity extends ActionBarActivity {
 	private void getParseUserData(){
 
 
-		if (currentUser.has("myPetProfile")){
+		if (currentUser.has("myPetProfile") && (petProfile!= null)){
 
 			if(petProfile.has("petName")){
 				petName.setText(petProfile.getString("petName")+", ");
@@ -102,7 +102,9 @@ public class MyProfileActivity extends ActionBarActivity {
 
         
         try {
-			petProfile = currentUser.getParseObject("myPetProfile").fetchIfNeeded();
+        	if (currentUser.has("myPetProfile")){
+    			petProfile = currentUser.getParseObject("myPetProfile").fetchIfNeeded();
+        	}
 			Log.d(TAG, "retrieved petProfile");
 
 		} catch (ParseException e) {
@@ -129,8 +131,22 @@ public class MyProfileActivity extends ActionBarActivity {
     @Override
     protected void onResume(){
     	super.onResume();
+    	
+    	
     	if ((currentUser != null) && ParseFacebookUtils.isLinked(currentUser)) {
         	//user logged in through facebook
+    		try {
+            	if (currentUser.has("myPetProfile")){
+        			petProfile = currentUser.getParseObject("myPetProfile").fetchIfNeeded();
+            	}
+    			Log.d(TAG, "retrieved petProfile");
+
+    		} catch (ParseException e) {
+    			// TODO Auto-generated catch block
+    			e.printStackTrace();
+    			Log.d(TAG,"error fetching");
+    		}
+    		
         	getParseUserData();
 		} else {
 			Log.d(TAG,"user not logged in");

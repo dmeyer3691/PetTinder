@@ -68,7 +68,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:contentDescription="@string/discoveryMore"
-            android:src="@drawable/ic_launcher" />
+            android:src="@drawable/ic_action_about" />
         <!-- The ic_launcher button is just a placeholder -->
 
         <ImageButton
