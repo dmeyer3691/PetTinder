@@ -31,7 +31,7 @@ import android.widget.TextView;
 public class MyProfileActivity extends ActionBarActivity {
 
 	Intent settingsIntent, editProfileIntent;
-	TextView petName, petAge, distance, petBio, aboutPet;
+	TextView petName, petAge, petBio, petBreed, aboutPet;
 	ImageView petPic;
 	ParseUser currentUser;
 	ParseObject petProfile;
@@ -53,12 +53,12 @@ public class MyProfileActivity extends ActionBarActivity {
 			if(petProfile.has("petAge")){
 				petAge.setText(petProfile.getString("petAge"));
 			}
-			if(petProfile.has("petZip")){
-				//getLocation of pet profile, calculate how far away from user currently, display answer
-				//distance.setText( (String) petProfile.get("location"));
-			}
 			if(petProfile.has("petBio")){
 				petBio.setText(petProfile.getString("petBio"));
+			}
+			if(petProfile.has("petBreed")){
+				String breed = petProfile.getString("petBreed");
+				petBreed.setText(breed);
 			}
 			if(petProfile.has("profilePicture")){
 				profilePicture = petProfile.getParseFile("profilePicture");
@@ -93,7 +93,7 @@ public class MyProfileActivity extends ActionBarActivity {
         editProfileIntent = new Intent(this, EditProfileActivity.class);
         petName = (TextView) findViewById(R.id.petName);
         petAge = (TextView) findViewById(R.id.petAge);
-        distance = (TextView) findViewById(R.id.distance);
+        petBreed = (TextView) findViewById(R.id.petBreed);
         petBio = (TextView) findViewById(R.id.profileBio);
         petPic = (ImageView) findViewById(R.id.petPic);
         aboutPet = (TextView) findViewById(R.id.bio);

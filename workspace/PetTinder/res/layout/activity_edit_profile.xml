@@ -44,14 +44,13 @@
         android:layout_width="match_parent"
     	android:layout_height="wrap_content" >
         
-        <EditText
-	       android:id="@+id/pet_zip_edit"
-	       android:layout_width="wrap_content"
-	       android:layout_height="wrap_content"
-	       android:layout_weight="1"
-	       android:layout_gravity="left"
-	       android:inputType="number"
-	       android:hint="Zip Code" />
+        <Spinner
+	        android:id="@+id/breed_toggle"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	      	android:layout_weight="1"
+	       	android:layout_gravity="right"
+	        android:text="Select" />
 
         <Spinner
 	        android:id="@+id/gender_toggle"

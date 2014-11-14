@@ -49,6 +49,11 @@
         <item>Male</item>
         <item>Female</item>
     </string-array>
+    <string-array name="breed_array">
+        <item>Dog</item>
+        <item>Cat</item>
+        <item>Other</item>
+    </string-array>
 
     <string name="title_activity_messaging">MessagingActivity</string>
 

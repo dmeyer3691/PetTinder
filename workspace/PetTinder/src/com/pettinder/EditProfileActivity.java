@@ -41,13 +41,13 @@ public class EditProfileActivity extends ActionBarActivity implements OnItemSele
 
 	Intent settingsIntent;
 	ImageButton profileButton;
-	Spinner genderSelection;
-	EditText petBio, petName, petAge, petZip;
+	Spinner genderSelection, breedSelection;
+	EditText petBio, petName, petAge;
 	ParseUser currentUser;
 	ParseObject petProfile;
 	ParseFile profilePicture;
 	BitmapDrawable imageBitmap;
-	String petGender;
+	String petGender, petBreed;
 	private final String TAG = "EditProfileActivity";
     private static final int GET_FROM_GALLERY = 1;
 
@@ -91,11 +91,6 @@ public class EditProfileActivity extends ActionBarActivity implements OnItemSele
 		}else{
 			petProfile.put("petAge", petAge.getText().toString());
 		}
-		if (petZip.getText().toString().equals("")){
-			petProfile.put("petZip", petZip.getHint());
-		}else{
-			petProfile.put("petZip", petZip.getText().toString());
-		}
 		if (petBio.getText().toString().equals("")){
 			petProfile.put("petBio", petBio.getHint().toString());
 		} else {
@@ -103,6 +98,9 @@ public class EditProfileActivity extends ActionBarActivity implements OnItemSele
 		}
 		if (!petGender.equals(null)){
 			petProfile.put("petGender", petGender);
+		}
+		if (!petBreed.equals(null)){
+			petProfile.put("petBreed", petBreed);
 		}
 
 		
@@ -141,9 +139,6 @@ public class EditProfileActivity extends ActionBarActivity implements OnItemSele
 			if(petProfile.has("petAge")){
 				petAge.setHint(petProfile.getString("petAge"));
 			}
-			if(petProfile.has("petZip")){
-				petZip.setHint(petProfile.getString("petZip"));
-			}
 			if(petProfile.has("petBio")){
 				petBio.setHint(petProfile.getString("petBio"));
 			}
@@ -153,6 +148,16 @@ public class EditProfileActivity extends ActionBarActivity implements OnItemSele
 					genderSelection.setSelection(0);
 				} else if (petGender.equals("Female")){
 					genderSelection.setSelection(1);
+				}
+			}
+			if(petProfile.has("petBreed")){
+				petBreed = (String) petProfile.get("petBreed");
+				if (petBreed.equals("Dog")){
+					breedSelection.setSelection(0);
+				} else if (petBreed.equals("Cat")){
+					breedSelection.setSelection(1);
+				} else if (petBreed.equals("other")) {
+					breedSelection.setSelection(2);
 				}
 			}
 			if(petProfile.has("profilePicture")){
@@ -168,6 +173,7 @@ public class EditProfileActivity extends ActionBarActivity implements OnItemSele
 					e.printStackTrace();
 				}
 			}
+			
 			Log.d(TAG, "Profile Loaded");
 		} else {
 			Log.d(TAG, "no profile available");
@@ -193,16 +199,41 @@ public class EditProfileActivity extends ActionBarActivity implements OnItemSele
         petBio = (EditText) findViewById(R.id.profile_bio_edit);
         petName = (EditText) findViewById(R.id.pet_name_edit);
         petAge = (EditText) findViewById(R.id.pet_age_edit);
-        petZip = (EditText) findViewById(R.id.pet_zip_edit);
 
         
         //populate gender selection spinner options
         genderSelection = (Spinner) findViewById(R.id.gender_toggle);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+        ArrayAdapter<CharSequence> genderAdapter = ArrayAdapter.createFromResource(this,
                 R.array.gender_array, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        genderSelection.setAdapter(adapter);
+        genderAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        genderSelection.setAdapter(genderAdapter);
         genderSelection.setOnItemSelectedListener(this);
+        
+        breedSelection = (Spinner) findViewById(R.id.breed_toggle);
+        ArrayAdapter<CharSequence> breedAdapter = ArrayAdapter.createFromResource(this,
+        		R.array.breed_array, android.R.layout.simple_spinner_item);
+        breedAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        breedSelection.setAdapter(breedAdapter);
+        breedSelection.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view, int pos,
+					long id) {
+				petBreed = (String) parent.getItemAtPosition(pos);
+				Log.d(TAG, petBreed);
+				
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {
+				// TODO Auto-generated method stub
+				//Nothing
+			}
+        	
+        	
+		});
+        
+        
         profileButton.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
