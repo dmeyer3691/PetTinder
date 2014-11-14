@@ -208,34 +208,7 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
 			}
 		});
 		
-		// Check if there is a currently logged in user
-		// and it's linked to a Facebook account.
-		currentUser = ParseUser.getCurrentUser();
-		if ((currentUser != null) && ParseFacebookUtils.isLinked(currentUser)) {
-			// Go to the user info activity
-			makeMeRequest();
-			Log.d(TAG,"User already logged in to facebook");
-			button2.setVisibility(View.VISIBLE);
-			Toast.makeText(getApplicationContext(), "Logged In", Toast.LENGTH_LONG).show();
-		}
-
-        // Get the location manager
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        // Define the criteria how to select the locatioin provider -> use
-        // default
-        Criteria criteria = new Criteria();
-        provider = locationManager.getBestProvider(criteria, false);
-        Location location = locationManager.getLastKnownLocation(provider);
-
-        // Initialize the location fields
-        if (location != null) {
-        	System.out.println("Provider " + provider + " has been selected.");
-        	onLocationChanged(location);
-        } else {
-        	
-        	latituteField.setText("Location not available");
-        	longitudeField.setText("Location not available");
-        }
+		
         Log.d(TAG, "Called onCreate");
     }
 
@@ -256,7 +229,34 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
     @Override
     protected void onResume(){
     	super.onResume();
+    	// Check if there is a currently logged in user
+		// and it's linked to a Facebook account.
+		currentUser = ParseUser.getCurrentUser();
+		if ((currentUser != null) && ParseFacebookUtils.isLinked(currentUser)) {
+			// Go to the user info activity
+			makeMeRequest();
+			Log.d(TAG,"User already logged in to facebook");
+			button2.setVisibility(View.VISIBLE);
+			Toast.makeText(getApplicationContext(), "Logged In", Toast.LENGTH_LONG).show();
+		}
+
+        // Get the location manager
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        // Define the criteria how to select the locatioin provider -> use
+        // default
+        Criteria criteria = new Criteria();
+        provider = locationManager.getBestProvider(criteria, false);
+        Location location = locationManager.getLastKnownLocation(provider);
     	locationManager.requestLocationUpdates(provider, 400, 1, this);
+        // Initialize the location fields
+        if (location != null) {
+        	System.out.println("Provider " + provider + " has been selected.");
+        	onLocationChanged(location);
+        } else {
+        	
+        	latituteField.setText("Location not available");
+        	longitudeField.setText("Location not available");
+        }
         Log.d(TAG, "Called onResume");
         // Logs 'install' and 'app activate' App Events. Facebook
         AppEventsLogger.activateApp(this);
@@ -309,9 +309,9 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
       int lng = (int) (location.getLongitude());
       latituteField.setText(String.valueOf(lat));
       longitudeField.setText(String.valueOf(lng));
-      currentUser.put("Latitude", location.getLatitude());
-      currentUser.put("Longitude", location.getLongitude());
-      currentUser.saveInBackground();
+      //currentUser.put("Latitude", location.getLatitude());
+      //currentUser.put("Longitude", location.getLongitude());
+      //currentUser.saveInBackground();
     }
 
     @Override

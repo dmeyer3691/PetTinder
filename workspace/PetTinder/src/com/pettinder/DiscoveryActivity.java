@@ -32,9 +32,9 @@ public class DiscoveryActivity extends ActionBarActivity {
 
 	Intent matchesIntent, settingsIntent, viewProfileIntent;
 
-	private Map<String, Boolean> choices;
+	private Map<String, Boolean> userChoices;
 	private ParseObject petProfile;
-	private ParseUser currentUser;
+	private ParseUser currentUser, potentialUserMatch;
 	private List<ParseUser> potentialMatches, allUsers;
 	private ImageView profilePic;
 	private TextView name, breed;
@@ -46,14 +46,14 @@ public class DiscoveryActivity extends ActionBarActivity {
 	private void getProfile() {
 		// This is a placeholder system for the sample profiles
 		// Fetch profile pic, name, breed
-		ParseUser nextMatch = potentialMatches.remove(0);
-		currentId = nextMatch.getObjectId();
+		potentialUserMatch = potentialMatches.remove(0);
+		currentId = potentialUserMatch.getObjectId();
 		Log.d(TAG, currentId);
 		// Get user's pet profile
 		ParseObject petProfile = null;
-		if (nextMatch.has("myPetProfile")) {
+		if (potentialUserMatch.has("myPetProfile")) {
 			try {
-				petProfile = nextMatch.getParseObject("myPetProfile")
+				petProfile = potentialUserMatch.getParseObject("myPetProfile")
 						.fetchIfNeeded();
 				if (petProfile != null) {
 					// Set view data for pet
@@ -87,9 +87,9 @@ public class DiscoveryActivity extends ActionBarActivity {
 	// Processes the user's selection for the current discovery profile
 	private void handleDiscoverySelection(boolean liked) {
 
-		if (!choices.containsKey(currentId)){
-			choices.put(currentId, liked);
-			currentUser.put("choices", choices);
+		if (!userChoices.containsKey(currentId)){
+			userChoices.put(currentId, liked);
+			currentUser.put("userChoices", userChoices);
 			try {
 				currentUser.save();
 			} catch (ParseException e) {
@@ -98,14 +98,16 @@ public class DiscoveryActivity extends ActionBarActivity {
 			}
 			Log.d(TAG, currentId);
 		} else if (liked) {
+			/*
 			ParseQuery<ParseObject> query = ParseQuery.getQuery("user");
 			ParseObject temp = null;
+			*/
+			ParseObject temp = null;
 			try {
-				temp = query.get(currentId);
-				Map<String, Boolean> likedUserChoices = temp.getMap("choices");
+				//temp = query.get(currentId).fetchIfNeeded();
+				Map<String, Boolean> likedUseruserChoices = potentialUserMatch.getMap("userChoices");
 				String currentUsername = currentUser.getString("username");
-				if (likedUserChoices.containsKey(currentUsername)
-						&& likedUserChoices.get(currentUsername)) {
+				if (likedUseruserChoices != null && (likedUseruserChoices.containsKey(currentUsername) && likedUseruserChoices.get(currentUsername))) {
 					temp = new ParseObject("matches");
 					temp.put("User_1", currentId);
 					temp.put("User_2", currentUsername);
@@ -231,17 +233,20 @@ public class DiscoveryActivity extends ActionBarActivity {
 		}
 
 
-		// Initialize choices to store data, setting its object ID to the
+		// Initialize userChoices to store data, setting its object ID to the
 		// current user's username
-		if (currentUser.has("choices")) {
-			choices = currentUser.getMap("choices");
-			if (choices == null) {
-				choices = new HashMap<String, Boolean>();
-				currentUser.put("choices", choices);
+		if (currentUser.has("userChoices")) {
+			userChoices = currentUser.getMap("userChoices");
+			Log.d(TAG,"currentUser has userChoices");
+			if (userChoices == null) {
+				userChoices = new HashMap<String, Boolean>();
+				currentUser.put("userChoices", userChoices);
+				Log.d(TAG, "userChoices was null");
 			}
 		} else {
-			choices = new HashMap<String, Boolean>();
-			currentUser.put("choices", choices);
+			userChoices = new HashMap<String, Boolean>();
+			currentUser.put("userChoices", userChoices);
+			Log.d(TAG,"userChoices added for first time");
 		}
 		try {
 			currentUser.save();
