@@ -87,7 +87,7 @@ public class DiscoveryActivity extends ActionBarActivity {
 	// Processes the user's selection for the current discovery profile
 	private void handleDiscoverySelection(boolean liked) {
 
-		if (!userChoices.containsKey(currentId)){
+		if (!userChoices.containsKey(currentId)) {
 			userChoices.put(currentId, liked);
 			currentUser.put("userChoices", userChoices);
 			try {
@@ -99,15 +99,18 @@ public class DiscoveryActivity extends ActionBarActivity {
 			Log.d(TAG, currentId);
 		} else if (liked) {
 			/*
-			ParseQuery<ParseObject> query = ParseQuery.getQuery("user");
-			ParseObject temp = null;
-			*/
+			 * ParseQuery<ParseObject> query = ParseQuery.getQuery("user");
+			 * ParseObject temp = null;
+			 */
 			ParseObject temp = null;
 			try {
-				//temp = query.get(currentId).fetchIfNeeded();
-				Map<String, Boolean> likedUseruserChoices = potentialUserMatch.getMap("userChoices");
-				String currentUsername = currentUser.getObjectId();
-				if (likedUseruserChoices != null && likedUseruserChoices.containsKey(currentUsername) && likedUseruserChoices.get(currentUsername)) {
+				// temp = query.get(currentId).fetchIfNeeded();
+				Map<String, Boolean> likedUseruserChoices = potentialUserMatch
+						.getMap("userChoices");
+				String currentUsername = currentUser.getString("username");
+				if (likedUseruserChoices != null
+						&& (likedUseruserChoices.containsKey(currentUsername) && likedUseruserChoices
+								.get(currentUsername))) {
 					temp = new ParseObject("matches");
 					temp.put("User_1", currentId);
 					temp.put("User_2", currentUsername);
@@ -195,49 +198,19 @@ public class DiscoveryActivity extends ActionBarActivity {
 		} catch (ParseException e) {
 			Log.d(TAG, "Error: cannot retrieve nearby users");
 		}
-		
-//		 try { if (currentUser.has("myPetProfile")) { petProfile =
-//		 currentUser.getParseObject("myPetProfile") .fetchIfNeeded(); }
-//		 Log.d(TAG, "retrieved petProfile");
-//		 
-//		 } catch (ParseException e) { // TODO Auto-generated catch block
-//		 e.printStackTrace(); Log.d(TAG, "error fetching"); }
-		 
-		
-		for (ParseUser user : allUsers) {
-			double user_lat = currentUser.getNumber("Latitude").doubleValue();
-			double user_long = currentUser.getNumber("Longitude").doubleValue();
-			double match_lat = user.getNumber("Latitude").doubleValue();
-			double match_long = user.getNumber("Longitude").doubleValue();
-			Log.d(TAG, "radius = " + radius);
-			Log.d(TAG, "Lat = " + Double.toString(user_lat - match_lat));
-			Log.d(TAG, "Long = " + Double.toString(user_long - match_long));
-			if (Math.abs(user_lat - match_lat) <= radius && Math.abs(user_long - match_long) <= radius) {
-				if (!currentUser.getString("username").equals(user.getString("username"))) {
-					petProfile = user.getParseObject("myPetProfile");
-					try {
-						if (petProfile != null) {
-							petProfile = user.getParseObject("myPetProfile").fetchIfNeeded();
-							potentialMatches.add(user);
-							Log.d(TAG, "potential match added");
-						} else {
-							Log.d(TAG, "petProfle is null");
-						}
-					} catch (ParseException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-			}
 
-		}
-
+		// try { if (currentUser.has("myPetProfile")) { petProfile =
+		// currentUser.getParseObject("myPetProfile") .fetchIfNeeded(); }
+		// Log.d(TAG, "retrieved petProfile");
+		//
+		// } catch (ParseException e) { // TODO Auto-generated catch block
+		// e.printStackTrace(); Log.d(TAG, "error fetching"); }
 
 		// Initialize userChoices to store data, setting its object ID to the
 		// current user's username
 		if (currentUser.has("userChoices")) {
 			userChoices = currentUser.getMap("userChoices");
-			Log.d(TAG,"currentUser has userChoices");
+			Log.d(TAG, "currentUser has userChoices");
 			if (userChoices == null) {
 				userChoices = new HashMap<String, Boolean>();
 				currentUser.put("userChoices", userChoices);
@@ -246,7 +219,7 @@ public class DiscoveryActivity extends ActionBarActivity {
 		} else {
 			userChoices = new HashMap<String, Boolean>();
 			currentUser.put("userChoices", userChoices);
-			Log.d(TAG,"userChoices added for first time");
+			Log.d(TAG, "userChoices added for first time");
 		}
 		try {
 			currentUser.save();
@@ -254,7 +227,41 @@ public class DiscoveryActivity extends ActionBarActivity {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
+		for (ParseUser user : allUsers) {
+			double user_lat = currentUser.getNumber("Latitude").doubleValue();
+			double user_long = currentUser.getNumber("Longitude").doubleValue();
+			double match_lat = user.getNumber("Latitude").doubleValue();
+			double match_long = user.getNumber("Longitude").doubleValue();
+			Log.d(TAG, "radius = " + radius);
+			Log.d(TAG, "Lat = " + Double.toString(user_lat - match_lat));
+			Log.d(TAG, "Long = " + Double.toString(user_long - match_long));
+			if (Math.abs(user_lat - match_lat) <= radius
+					&& Math.abs(user_long - match_long) <= radius) {
+				if (!currentUser.getString("username").equals(
+						user.getString("username"))) {
+					if (!userChoices.containsKey(user.getObjectId())) {
+						petProfile = user.getParseObject("myPetProfile");
+						try {
+							if (petProfile != null) {
+								petProfile = user
+										.getParseObject("myPetProfile")
+										.fetchIfNeeded();
+								potentialMatches.add(user);
+								Log.d(TAG, "potential match added");
+							} else {
+								Log.d(TAG, "petProfle is null");
+							}
+						} catch (ParseException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				}
+			}
+
+		}
+
 		if (potentialMatches.size() > 0) {
 			getProfile();
 		} else {
