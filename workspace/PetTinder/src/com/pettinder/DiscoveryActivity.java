@@ -106,8 +106,8 @@ public class DiscoveryActivity extends ActionBarActivity {
 			try {
 				//temp = query.get(currentId).fetchIfNeeded();
 				Map<String, Boolean> likedUseruserChoices = potentialUserMatch.getMap("userChoices");
-				String currentUsername = currentUser.getString("username");
-				if (likedUseruserChoices != null && (likedUseruserChoices.containsKey(currentUsername) && likedUseruserChoices.get(currentUsername))) {
+				String currentUsername = currentUser.getObjectId();
+				if (likedUseruserChoices != null && likedUseruserChoices.containsKey(currentUsername) && likedUseruserChoices.get(currentUsername)) {
 					temp = new ParseObject("matches");
 					temp.put("User_1", currentId);
 					temp.put("User_2", currentUsername);
