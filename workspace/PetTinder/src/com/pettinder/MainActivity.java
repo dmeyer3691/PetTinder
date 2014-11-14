@@ -234,6 +234,7 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
         	System.out.println("Provider " + provider + " has been selected.");
         	onLocationChanged(location);
         } else {
+        	
         	latituteField.setText("Location not available");
         	longitudeField.setText("Location not available");
         }
@@ -310,6 +311,9 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
       int lng = (int) (location.getLongitude());
       latituteField.setText(String.valueOf(lat));
       longitudeField.setText(String.valueOf(lng));
+      currentUser.put("Latitude", location.getLatitude());
+      currentUser.put("Longitude", location.getLongitude());
+      currentUser.saveInBackground();
     }
 
     @Override
