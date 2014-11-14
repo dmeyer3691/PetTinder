@@ -34,7 +34,7 @@ public class MatchesActivity extends ActionBarActivity {
 
 	public void openConversation(ArrayList<String> matches, int pos) {
 	    ParseQuery<ParseUser> query = ParseUser.getQuery();
-	    query.whereEqualTo("username", matches.get(pos));
+	    query.whereEqualTo("objectId", matches.get(pos));
 	    query.findInBackground(new FindCallback<ParseUser>() {
 	       public void done(List<ParseUser> user, ParseException e) {
 	           if (e == null) {
@@ -58,7 +58,7 @@ public class MatchesActivity extends ActionBarActivity {
         
         // Retrieve and list the user's matches
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Matches");
-        query.whereEqualTo("firstId", ParseUser.getCurrentUser().getString("username"));
+        query.whereEqualTo("firstId", ParseUser.getCurrentUser().getString("objectId"));
         query.include("secondId");
         // query.include("secondId.myPetProfile");
         query.findInBackground(new FindCallback<ParseObject>() {
@@ -70,8 +70,8 @@ public class MatchesActivity extends ActionBarActivity {
         	        List<String> names = new ArrayList<String>();
         	        // Each iteration adds a username / pet name to the respective list
         			for (int i=0; i<matchList.size(); i++) {
-        				ParseObject match = matchList.get(i).getParseObject("secondId");
-        				matches.add(match.getString("username"));
+        				ParseObject match = matchList.get(i).getParseObject("secondId"); //fetch?
+        				matches.add(match.getString("objectId"));
         				// Obtain pet name
         				if (match.has("myPetProfile")){
         					try {
