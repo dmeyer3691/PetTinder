@@ -47,7 +47,8 @@ public class DiscoveryActivity extends ActionBarActivity {
 		// This is a placeholder system for the sample profiles
 		// Fetch profile pic, name, breed
 		ParseUser nextMatch = potentialMatches.remove(0);
-
+		currentId = nextMatch.getObjectId();
+		Log.d(TAG, currentId);
 		// Get user's pet profile
 		ParseObject petProfile = null;
 		if (nextMatch.has("myPetProfile")) {
@@ -86,9 +87,17 @@ public class DiscoveryActivity extends ActionBarActivity {
 	// Processes the user's selection for the current discovery profile
 	private void handleDiscoverySelection(boolean liked) {
 
-		if (!choices.containsKey(currentId))
+		if (!choices.containsKey(currentId)){
 			choices.put(currentId, liked);
-		if (liked) {
+			currentUser.put("choices", choices);
+			try {
+				currentUser.save();
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			Log.d(TAG, currentId);
+		} else if (liked) {
 			ParseQuery<ParseObject> query = ParseQuery.getQuery("user");
 			ParseObject temp = null;
 			try {
@@ -97,6 +106,7 @@ public class DiscoveryActivity extends ActionBarActivity {
 				String currentUsername = currentUser.getString("username");
 				if (likedUserChoices.containsKey(currentUsername)
 						&& likedUserChoices.get(currentUsername)) {
+					temp = new ParseObject("matches");
 					temp.put("User_1", currentId);
 					temp.put("User_2", currentUsername);
 					temp.save();
@@ -106,7 +116,7 @@ public class DiscoveryActivity extends ActionBarActivity {
 					temp.save();
 				}
 			} catch (ParseException e) {
-				Log.d(TAG, "Error: Could not retrieve potential match line 128");
+				Log.d(TAG, "Error: Could not retrieve potential match line 112");
 			}
 
 		}
@@ -233,7 +243,12 @@ public class DiscoveryActivity extends ActionBarActivity {
 			choices = new HashMap<String, Boolean>();
 			currentUser.put("choices", choices);
 		}
-
+		try {
+			currentUser.save();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		if (potentialMatches.size() > 0) {
 			getProfile();
