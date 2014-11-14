@@ -1,6 +1,7 @@
 package com.pettinder;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -33,8 +34,11 @@ public class DiscoveryActivity extends ActionBarActivity {
     Intent matchesIntent, settingsIntent, viewProfileIntent;
     
     private Map<String, Boolean> choices;
+    private ParseObject petProfile;
     private ParseUser currentUser;
-    private List<ParseUser> potentialMatches;
+    private List<ParseUser> potentialMatches, allUsers;
+    private ImageView profilePic;
+    private TextView name, breed;
     
 
     private static final String TAG = "DiscoveryActivity";
@@ -44,28 +48,11 @@ public class DiscoveryActivity extends ActionBarActivity {
     private void getProfile() {
     	// This is a placeholder system for the sample profiles
     	// Fetch profile pic, name, breed
-    	ImageView profilePic = (ImageView) findViewById(R.id.discoveryImage);
-    	TextView name = (TextView) findViewById(R.id.discoveryName);
-    	TextView breed = (TextView) findViewById(R.id.discoveryBreed);
+
     	
-    	if (choices.containsKey(currentId)){
-    		getProfile();
-    		return;
-    	}
     	
-    	if (potentialMatches.size() > 0) {
-    		currentId = potentialMatches.remove(0).getString("username");
-    	} else {
-    		profilePic.setImageResource(R.drawable.mystery_doge);
-			name.setText("No pets left in the area!");
-			breed.setText("");
-			currentId = "";
-			ImageButton yes = (ImageButton) findViewById(R.id.discoveryYes);
-			ImageButton no = (ImageButton) findViewById(R.id.discoveryNo);
-			yes.setVisibility(View.GONE);
-			no.setVisibility(View.GONE);   
-    	}
     	
+    	currentId = potentialMatches.remove(0).getString("username");
     	
     	//Set profilePic, name, breed based on user ID
     	ParseObject nextMatch = new ParseObject("user");
@@ -73,41 +60,66 @@ public class DiscoveryActivity extends ActionBarActivity {
         try {
         	nextMatch = query.get(currentId);
 		} catch (ParseException e) {
-			Log.d(TAG, "Error: Could not retrieve potential match");
+			Log.d(TAG, "Error: Could not retrieve potential match line 78");
 		}
     	 
         //Get user's pet profile
         ParseObject petProfile = null;
         if (nextMatch.has("myPetProfile")){
         	try {
-				petProfile = currentUser.getParseObject("myPetProfile").fetchIfNeeded();
-			} catch (ParseException e) {
+				petProfile = nextMatch.getParseObject("myPetProfile").fetchIfNeeded();
+				if(petProfile!=null){
+    				//Set view data for pet
+    		        ParseFile profilePicture = petProfile.getParseFile("profilePicture");
+    				byte[] data;
+    				try {
+    					data = profilePicture.getData();
+    					BitmapDrawable imageBitmap = new BitmapDrawable(this.getResources(), BitmapFactory.decodeByteArray(data, 0, data.length));
+    					profilePic.setImageDrawable(imageBitmap);
+    				} catch (ParseException e) {
+    					Log.d(TAG, "Error loading image");
+    					e.printStackTrace();
+    				}
+    		        name.setText(petProfile.getString("petName"));
+    		    	breed.setText(petProfile.getString("petBreed"));
+        		}	
+			} catch (ParseException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
 				Log.d(TAG, "Error: Could not retrieve potential match's pet profile");
 			}
         }
         
-        //Set view data for pet
-        ParseFile profilePicture = petProfile.getParseFile("profilePicture");
-		byte[] data;
-		try {
-			data = profilePicture.getData();
-			BitmapDrawable imageBitmap = new BitmapDrawable(this.getResources(), BitmapFactory.decodeByteArray(data, 0, data.length));
-			profilePic.setImageDrawable(imageBitmap);
-		} catch (ParseException e) {
-			Log.d(TAG, "Error loading image");
-			e.printStackTrace();
-		}
-        name.setText(petProfile.getString("petName"));
-    	breed.setText(petProfile.getString("petBreed"));
+        
     	
     }
      	
-    // Processes the user's selection for the current discovery profile
+ // Processes the user's selection for the current discovery profile
     private void handleDiscoverySelection(boolean liked) {
 
-    	String id = currentId;
-    	if (!choices.containsKey(id)) choices.put(id, liked); 
-    	getProfile();
+	    if (!choices.containsKey(currentId)) choices.put(currentId, liked);
+	    if (liked){
+		    ParseQuery<ParseObject> query = ParseQuery.getQuery("user");
+		    ParseObject temp=null;
+	        try {
+	        	temp = query.get(currentId);
+		        Map<String,Boolean> likedUserChoices = temp.getMap("choices");
+		        String currentUsername = currentUser.getString("username");
+			    if (likedUserChoices.containsKey(currentUsername) && likedUserChoices.get(currentUsername)){
+			    	temp.put("User_1", currentId);
+			    	temp.put("User_2", currentUsername);
+			    	temp.save();
+			    	temp = new ParseObject("matches");
+			    	temp.put("User_1", currentUsername);
+			    	temp.put("User_2", currentId);
+			    	temp.save();
+			    }
+	        } catch (ParseException e) {
+	        	Log.d(TAG, "Error: Could not retrieve potential match line 128");
+	        }
+
+	    }
+	    getProfile();
     }
     
     @Override
@@ -118,7 +130,11 @@ public class DiscoveryActivity extends ActionBarActivity {
         matchesIntent = new Intent(this, MatchesActivity.class);
         settingsIntent = new Intent(this, SettingsActivity.class);
         viewProfileIntent = new Intent(this, ViewProfileActivity.class);   
-
+        potentialMatches = new LinkedList<ParseUser>();
+        
+    	profilePic = (ImageView) findViewById(R.id.discoveryImage);
+    	name = (TextView) findViewById(R.id.discoveryName);
+    	breed = (TextView) findViewById(R.id.discoveryBreed);
         
         //Check for the currently logged in user and that it is linked to a Facebook account
     	currentUser = ParseUser.getCurrentUser();
@@ -129,6 +145,10 @@ public class DiscoveryActivity extends ActionBarActivity {
 		//Initialize choices to store data, setting its object ID to the current user's username
         if (currentUser.has("choices")){
         	choices = currentUser.getMap("choices");
+        	if (choices == null){
+        		choices = new HashMap<String, Boolean>();
+        		currentUser.put("choices", choices);
+        	}
         } else {
         	choices = new HashMap<String,Boolean>();
         	currentUser.put("choices", choices);
@@ -141,25 +161,50 @@ public class DiscoveryActivity extends ActionBarActivity {
         //Set up list of profiles and obtain the first profile
         ParseQuery<ParseUser> query = ParseUser.getQuery();
         try {
-			potentialMatches = query.find();
+			allUsers = query.find();
 		} catch (ParseException e) {
 			Log.d(TAG,"Error: cannot retrieve nearby users");
 		}
         
-        for(ParseUser user : potentialMatches){
+        for(ParseUser user : allUsers){
         	double user_lat = currentUser.getNumber("Latitude").doubleValue();
         	double user_long = currentUser.getNumber("Longitude").doubleValue();
         	double match_lat = user.getNumber("Latitude").doubleValue();
         	double match_long = user.getNumber("Longitude").doubleValue();
         	if (user_lat - match_lat <= radius && user_long - match_long <= radius){
         		if (!currentUser.getString("username").equals(user.getString("username")))
-        				potentialMatches.add(user);
+        			if (petProfile!=null) {
+        				try {
+    						petProfile.fetchIfNeeded();
+    						potentialMatches.add(user);
+            				Log.d(TAG, "match added");
+    					} catch (ParseException e) {
+    						// TODO Auto-generated catch block
+    						e.printStackTrace();
+    					}
+        				
+        			}
+        			
+        			
         	}
         		
         }
 
+        if (potentialMatches.size() > 0) {
+            getProfile();
+    	} else {
+    		profilePic.setImageResource(R.drawable.mystery_doge);
+			name.setText("No pets left in the area!");
+			breed.setText("");
+			currentId = "";
+			ImageButton yes = (ImageButton) findViewById(R.id.discoveryYes);
+			ImageButton no = (ImageButton) findViewById(R.id.discoveryNo);
+			ImageButton profile = (ImageButton) findViewById(R.id.discoveryMore);
+			yes.setVisibility(View.GONE);
+			no.setVisibility(View.GONE);
+			profile.setVisibility(View.GONE);
+    	}
         
-        getProfile();
         // Register buttons
         ImageButton noButton = (ImageButton) findViewById(R.id.discoveryNo);
         noButton.setOnClickListener(new ImageButton.OnClickListener() {

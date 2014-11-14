@@ -29,7 +29,7 @@
             android:id="@+id/ProfileInfoLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/discoveryImage" >
+            android:layout_below="@id/discoveryImage" >
 
             <TextView
                 android:id="@+id/discoveryName"
