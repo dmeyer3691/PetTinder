@@ -174,9 +174,7 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
         super.onCreate(savedInstanceState);
         Parse.initialize(this, "bl9sFBxmrkDhNWSDxnlvbLIbeFrQ9kHUGEbBRI4a", "tCzPn6RbPx2ZJUmGc7AMb2eBoetXgO02A4jefTHp");
 		ParseFacebookUtils.initialize(getString(R.string.facebook_app_id));
-        // Start the sinch messaging service
-        //final Intent serviceIntent = new Intent(getApplicationContext(), MessageService.class);
-        //startService(serviceIntent);
+
 		
         setContentView(R.layout.activity_main);
         

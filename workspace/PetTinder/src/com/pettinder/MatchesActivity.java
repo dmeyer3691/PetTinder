@@ -33,6 +33,10 @@ public class MatchesActivity extends ActionBarActivity {
 	ArrayList<String> matches;
 
 	public void openConversation(ArrayList<String> matches, int pos) {
+		Intent intent = new Intent(getApplicationContext(), MessagingActivity.class);
+        intent.putExtra("RECIPIENT_ID", matches.get(pos));
+        startActivity(intent);
+        /*
 	    ParseQuery<ParseUser> query = ParseUser.getQuery();
 	    query.whereEqualTo("objectId", matches.get(pos));
 	    query.findInBackground(new FindCallback<ParseUser>() {
@@ -48,6 +52,7 @@ public class MatchesActivity extends ActionBarActivity {
 	           }
 	       }
 	    });
+	    */
 	}
     
     @Override
@@ -55,11 +60,13 @@ public class MatchesActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_matches);
         Parse.initialize(this, "bl9sFBxmrkDhNWSDxnlvbLIbeFrQ9kHUGEbBRI4a", "tCzPn6RbPx2ZJUmGc7AMb2eBoetXgO02A4jefTHp");
-        
+        // Start the sinch messaging service
+        final Intent serviceIntent = new Intent(getApplicationContext(), MessageService.class);
+        startService(serviceIntent);
         // Retrieve and list the user's matches
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("Matches");
-        query.whereEqualTo("User_1", ParseUser.getCurrentUser().getString("objectId"));
-        query.include("User_2");
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("matches");
+        query.whereEqualTo("User_1", ParseUser.getCurrentUser().getObjectId());
+        //query.include("User_2");
         // query.include("User_2.myPetProfile");
         query.findInBackground(new FindCallback<ParseObject>() {
         	public void done(List<ParseObject> matchList, com.parse.ParseException e) {
@@ -70,19 +77,32 @@ public class MatchesActivity extends ActionBarActivity {
         	        List<String> names = new ArrayList<String>();
         	        // Each iteration adds a username / pet name to the respective list
         			for (int i=0; i<matchList.size(); i++) {
-        				ParseObject match = matchList.get(i).getParseObject("User_2"); //fetch?
-        				matches.add(match.getString("objectId"));
-        				// Obtain pet name
-        				if (match.has("myPetProfile")){
-        					try {
-        						ParseObject petProfile = match.getParseObject("myPetProfile").fetchIfNeeded();
-        						if (petProfile != null) names.add(petProfile.getString("petName"));
-        						else names.add("Unknown Name");
-        					} catch (ParseException ex) {
-        						Log.d(TAG, "Error: Could not retrieve match's name");
-        						names.add("Unknown Name");
-        					}
-        				}
+        				Log.d("MatchesActivity","processing match #" + i);
+        				String matchId = matchList.get(i).getString("User_2");
+        				ParseQuery<ParseUser> query2 = ParseUser.getQuery();
+        				ParseUser match;
+						try {
+							match = query2.get(matchId);
+							match.fetchIfNeeded();
+							matches.add(match.getObjectId());
+	        				// Obtain pet name
+	        				if (match.has("myPetProfile")){
+	        					try {
+	        						ParseObject petProfile = match.getParseObject("myPetProfile").fetchIfNeeded();
+	        						if (petProfile != null) names.add(petProfile.getString("petName"));
+	        						else names.add("Unknown Name");
+	        					} catch (ParseException ex) {
+	        						Log.d(TAG, "Error: Could not retrieve match's name");
+	        						names.add("Unknown Name");
+	        					}
+	        				}
+						} catch (ParseException e2) {
+							// TODO Auto-generated catch block
+							e2.printStackTrace();
+							Log.d("MatchesActivity","could not fetch match");
+
+						}
+        				
         			}
         			// Display the list of matches
         			ArrayAdapter<String> matchesArrayAdapter =
@@ -103,6 +123,7 @@ public class MatchesActivity extends ActionBarActivity {
         			Toast.makeText(getApplicationContext(),
         	                "Error loading user list",
         	                    Toast.LENGTH_LONG).show();
+        			Log.d("MatchesActivity","error loading user list");
         		}
         	}
         });
