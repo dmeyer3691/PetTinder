@@ -52,8 +52,9 @@ public class DiscoveryActivity extends ActionBarActivity {
     	
     	
     	
-    	currentId = potentialMatches.remove(0).getString("username");
+    	ParseUser nextMatch = potentialMatches.remove(0);
     	
+    	/*
     	//Set profilePic, name, breed based on user ID
     	ParseObject nextMatch = new ParseObject("user");
     	ParseQuery<ParseObject> query = ParseQuery.getQuery("user");
@@ -62,7 +63,7 @@ public class DiscoveryActivity extends ActionBarActivity {
 		} catch (ParseException e) {
 			Log.d(TAG, "Error: Could not retrieve potential match line 78");
 		}
-    	 
+    	 */
         //Get user's pet profile
         ParseObject petProfile = null;
         if (nextMatch.has("myPetProfile")){
@@ -119,7 +120,20 @@ public class DiscoveryActivity extends ActionBarActivity {
 	        }
 
 	    }
-	    getProfile();
+	    if (potentialMatches.size() > 0) {
+            getProfile();
+    	} else {
+    		profilePic.setImageResource(R.drawable.mystery_doge);
+			name.setText("No pets left in the area!");
+			breed.setText("");
+			currentId = "";
+			ImageButton yes = (ImageButton) findViewById(R.id.discoveryYes);
+			ImageButton no = (ImageButton) findViewById(R.id.discoveryNo);
+			ImageButton profile = (ImageButton) findViewById(R.id.discoveryMore);
+			yes.setVisibility(View.GONE);
+			no.setVisibility(View.GONE);
+			profile.setVisibility(View.GONE);
+    	}
     }
     
     @Override
@@ -171,20 +185,23 @@ public class DiscoveryActivity extends ActionBarActivity {
         	double user_long = currentUser.getNumber("Longitude").doubleValue();
         	double match_lat = user.getNumber("Latitude").doubleValue();
         	double match_long = user.getNumber("Longitude").doubleValue();
-        	if (user_lat - match_lat <= radius && user_long - match_long <= radius){
+        	Log.d(TAG,"radius = " + radius);
+        	Log.d(TAG, "Lat = " + Double.toString(user_lat-match_lat));
+        	Log.d(TAG, "Long = " + Double.toString(user_long - match_long));
+        	if (Math.abs(user_lat - match_lat) <= radius && Math.abs(user_long - match_long) <= radius){
         		if (!currentUser.getString("username").equals(user.getString("username")))
-        			if (petProfile!=null) {
-        				try {
-    						petProfile.fetchIfNeeded();
-    						potentialMatches.add(user);
-            				Log.d(TAG, "match added");
-    					} catch (ParseException e) {
-    						// TODO Auto-generated catch block
-    						e.printStackTrace();
-    					}
-        				
-        			}
-        			
+        			try {
+						petProfile = currentUser.getParseObject("myPetProfile").fetchIfNeeded();
+						if (petProfile!=null) {
+							potentialMatches.add(user);
+	        				Log.d(TAG, "potential match added");
+	        			} else {
+	        				Log.d(TAG, "petProfle is null");
+	        			}
+					} catch (ParseException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
         			
         	}
         		
