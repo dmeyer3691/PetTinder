@@ -27,14 +27,14 @@ import java.util.List;
  * https://www.sinch.com/tutorials/android-messaging-tutorial-using-sinch-and-parse/
  */
 public class MatchesActivity extends ActionBarActivity {
-
+	private static final String TAG = "MatchesActivity";
 	Button connectionButton, searchButton;
 	ListView matchesListView;
 	ArrayList<String> matches;
 
 	public void openConversation(ArrayList<String> matches, int pos) {
 	    ParseQuery<ParseUser> query = ParseUser.getQuery();
-	    query.whereEqualTo("username", matches.get(pos));
+	    query.whereEqualTo("objectId", matches.get(pos));
 	    query.findInBackground(new FindCallback<ParseUser>() {
 	       public void done(List<ParseUser> user, ParseException e) {
 	           if (e == null) {
@@ -55,26 +55,43 @@ public class MatchesActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_matches);
         Parse.initialize(this, "bl9sFBxmrkDhNWSDxnlvbLIbeFrQ9kHUGEbBRI4a", "tCzPn6RbPx2ZJUmGc7AMb2eBoetXgO02A4jefTHp");
-        // Start the sinch messaging service
-        final Intent serviceIntent = new Intent(getApplicationContext(), MessageService.class);
-        startService(serviceIntent);
         
-        ParseQuery<ParseUser> query = ParseUser.getQuery();
-        // match logic
-        // query.where...
-        query.findInBackground(new FindCallback<ParseUser>() {
-        	public void done(List<ParseUser> matchList, com.parse.ParseException e) {
+        // Retrieve and list the user's matches
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Matches");
+        query.whereEqualTo("firstId", ParseUser.getCurrentUser().getString("objectId"));
+        query.include("secondId");
+        // query.include("secondId.myPetProfile");
+        query.findInBackground(new FindCallback<ParseObject>() {
+        	public void done(List<ParseObject> matchList, com.parse.ParseException e) {
         		if (e == null) {
+    				// The list of usernames (IDs), used for messaging
         	        matches = new ArrayList<String>();
+    				// The list of human-readable pet names, only used by matchesArrayAdapter
+        	        List<String> names = new ArrayList<String>();
+        	        // Each iteration adds a username / pet name to the respective list
         			for (int i=0; i<matchList.size(); i++) {
-        				matches.add(matchList.get(i).getUsername().toString());
+        				ParseObject match = matchList.get(i).getParseObject("secondId"); //fetch?
+        				matches.add(match.getString("objectId"));
+        				// Obtain pet name
+        				if (match.has("myPetProfile")){
+        					try {
+        						ParseObject petProfile = match.getParseObject("myPetProfile").fetchIfNeeded();
+        						if (petProfile != null) names.add(petProfile.getString("petName"));
+        						else names.add("Unknown Name");
+        					} catch (ParseException ex) {
+        						Log.d(TAG, "Error: Could not retrieve match's name");
+        						names.add("Unknown Name");
+        					}
+        				}
         			}
+        			// Display the list of matches
         			ArrayAdapter<String> matchesArrayAdapter =
         					new ArrayAdapter<String>(getApplicationContext(),
-        							R.layout.match_list_item, matches);
+        							R.layout.match_list_item, names);
         	        matchesListView = (ListView) findViewById(R.id.matchesListView);
         			matchesListView.setAdapter(matchesArrayAdapter);
         			
+        			// Set click listener for the match list
         			matchesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
         				@Override
         				public void onItemClick(AdapterView<?> a, View v, int i, long l) {
@@ -87,15 +104,8 @@ public class MatchesActivity extends ActionBarActivity {
         	                "Error loading user list",
         	                    Toast.LENGTH_LONG).show();
         		}
-}
+        	}
         });
-        
-        
-        
-        //Drawable img;
-        //img = getResources().getDrawable(R.drawable.loudnoises);
-        //img.setBounds(0, 0, 100, 100);
-        //connectionButton.setCompoundDrawables(null, null, img, null);
     }
 
     

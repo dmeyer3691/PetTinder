@@ -9,36 +9,15 @@
     tools:context="com.pettinder.MainActivity" >
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/matchesHeader"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/matches_string"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
-    <Button
-        android:id="@+id/searchButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_below="@id/textView1"
-        android:text="@string/search_string" />
-
-    <EditText
-        android:id="@+id/searchBar"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@id/searchButton"
-        android:layout_alignBottom="@+id/searchButton"
-        android:layout_alignParentLeft="true"
-        android:layout_toLeftOf="@id/searchButton"
-        android:hint="@string/search_string"
-        android:inputType="text"
-        android:scrollHorizontally="true"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-
     <ListView
         android:id="@+id/matchesListView"
-        android:layout_below="@id/searchBar"
+        android:layout_below="@id/matchesHeader"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
