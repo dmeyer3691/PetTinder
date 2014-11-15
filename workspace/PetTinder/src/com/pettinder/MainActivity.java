@@ -49,11 +49,13 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
     private String provider;
 	private Dialog progressDialog;
 	private ParseUser currentUser;
+	private GPSManager gps;
     
 	// onClickListeners    
- 	View.OnClickListener destroy = (new View.OnClickListener() {
+ 	View.OnClickListener enableGPS = (new View.OnClickListener() {
          public void onClick(View v) {
-             finish();
+             gps = new GPSManager(MainActivity.this);
+             gps.start();
          }
      });
  	View.OnClickListener discovery = (new View.OnClickListener() {
@@ -185,8 +187,8 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
     	// register buttons
         //probably remove this button
     	button1 = (Button) findViewById(R.id.button1);
-    	button1.setOnClickListener(destroy);
-    	button1.setVisibility(View.INVISIBLE);
+    	button1.setOnClickListener(enableGPS);
+
     	
         button2 = (Button) findViewById(R.id.button2);
         button2.setOnClickListener(discovery);
