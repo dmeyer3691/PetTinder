@@ -3,16 +3,12 @@ package com.pettinder;
 import android.support.v7.app.ActionBarActivity;
 import android.content.Context;
 import android.content.Intent;
-import android.net.wifi.p2p.WifiP2pManager.ActionListener;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
@@ -33,12 +29,10 @@ public class ConnectionActivity extends ActionBarActivity {
 	        }
 	        return handled;
 		}
-	});
-	
+	});	
 	
 	private void sendMessage() {
 		// TODO Auto-generated method stub
-		
 	}
     
     @Override
@@ -54,7 +48,6 @@ public class ConnectionActivity extends ActionBarActivity {
         pending_message.setHorizontallyScrolling(false);
     }
 
-    
     @Override
     protected void onStart(){
     	super.onStart();
@@ -62,7 +55,6 @@ public class ConnectionActivity extends ActionBarActivity {
     	InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
     	// only will trigger it if no physical keyboard is open
     	inputMethodManager.showSoftInput(pending_message, InputMethodManager.SHOW_IMPLICIT);
-
     }
     
     @Override
@@ -118,6 +110,4 @@ public class ConnectionActivity extends ActionBarActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-    
-    
 }

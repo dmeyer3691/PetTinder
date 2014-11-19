@@ -13,12 +13,10 @@ import com.parse.ParseUser;
 
 import android.support.v7.app.ActionBarActivity;
 import android.app.Activity;
-import android.content.ClipData.Item;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -29,10 +27,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -51,11 +47,9 @@ public class EditProfileActivity extends ActionBarActivity implements OnItemSele
 	private final String TAG = "EditProfileActivity";
     private static final int GET_FROM_GALLERY = 1;
 
-    
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
 
         //Detects request codes
         if(requestCode==GET_FROM_GALLERY && resultCode == Activity.RESULT_OK) {
@@ -102,7 +96,6 @@ public class EditProfileActivity extends ActionBarActivity implements OnItemSele
 		if (!petBreed.equals(null)){
 			petProfile.put("petBreed", petBreed);
 		}
-
 		
 	    ByteArrayOutputStream stream = new ByteArrayOutputStream();
 	    imageBitmap.getBitmap().compress(Bitmap.CompressFormat.JPEG, 100, stream);
@@ -123,16 +116,11 @@ public class EditProfileActivity extends ActionBarActivity implements OnItemSele
 		currentUser.put("myPetProfile", petProfile);
 		currentUser.saveInBackground();
 		Log.d(TAG, "SAVED");
-		Toast.makeText(this, "Profile Saved", 0).show();
-
-		
+		Toast.makeText(this, "Profile Saved", Toast.LENGTH_SHORT).show();
 	}
 	
 	private void getParseUserData(){
-
-
 		if (currentUser.has("myPetProfile") && (petProfile!= null)){
-			
 			if(petProfile.has("petName")){
 				petName.setHint(petProfile.getString("petName"));
 			}
@@ -173,22 +161,18 @@ public class EditProfileActivity extends ActionBarActivity implements OnItemSele
 					e.printStackTrace();
 				}
 			}
-			
 			Log.d(TAG, "Profile Loaded");
 		} else {
 			Log.d(TAG, "no profile available");
 		}
-		
 	}
-	
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
         Parse.initialize(this, "bl9sFBxmrkDhNWSDxnlvbLIbeFrQ9kHUGEbBRI4a", "tCzPn6RbPx2ZJUmGc7AMb2eBoetXgO02A4jefTHp");
-        
-        
+            
         //define intents
         settingsIntent = new Intent(this, SettingsActivity.class);
         // make image button display users profile picture
@@ -199,8 +183,7 @@ public class EditProfileActivity extends ActionBarActivity implements OnItemSele
         petBio = (EditText) findViewById(R.id.profile_bio_edit);
         petName = (EditText) findViewById(R.id.pet_name_edit);
         petAge = (EditText) findViewById(R.id.pet_age_edit);
-
-        
+     
         //populate gender selection spinner options
         genderSelection = (Spinner) findViewById(R.id.gender_toggle);
         ArrayAdapter<CharSequence> genderAdapter = ArrayAdapter.createFromResource(this,
@@ -215,7 +198,6 @@ public class EditProfileActivity extends ActionBarActivity implements OnItemSele
         breedAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         breedSelection.setAdapter(breedAdapter);
         breedSelection.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int pos,
 					long id) {
@@ -223,35 +205,24 @@ public class EditProfileActivity extends ActionBarActivity implements OnItemSele
 				Log.d(TAG, petBreed);
 				
 			}
-
 			@Override
 			public void onNothingSelected(AdapterView<?> arg0) {
 				// TODO Auto-generated method stub
 				//Nothing
 			}
-        	
-        	
 		});
         
-        
-        profileButton.setOnClickListener(new View.OnClickListener() {
-			
+        profileButton.setOnClickListener(new View.OnClickListener() {	
 			@Override
 			public void onClick(View v) {
 				startActivityForResult(new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI), GET_FROM_GALLERY);
-				
 			}
 		});
         
-        
         //user specific stuff
-        currentUser = ParseUser.getCurrentUser();
-        
-
-        
+        currentUser = ParseUser.getCurrentUser();  
     }
 
-    
     @Override
     protected void onStart(){
     	super.onStart();
@@ -272,16 +243,12 @@ public class EditProfileActivity extends ActionBarActivity implements OnItemSele
             		petProfile = currentUser.getParseObject("myPetProfile").fetchIfNeeded();
         			profilePicture = petProfile.getParseFile("profilePicture");	
             	}
-    			
     			Log.d(TAG, "retrieved petProfile");
-
     		} catch (ParseException e) {
     			// TODO Auto-generated catch block
     			e.printStackTrace();
     			Log.d(TAG,"error fetching");
     		}
-    		
-    		
         	getParseUserData();
 		} else {
 			Log.d(TAG,"user not logged in");
@@ -291,7 +258,6 @@ public class EditProfileActivity extends ActionBarActivity implements OnItemSele
     @Override
     protected void onPause(){
     	super.onPause();
-    	//saveChanges();
     }
     
     @Override
@@ -307,8 +273,6 @@ public class EditProfileActivity extends ActionBarActivity implements OnItemSele
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-       
-    	//shoulnd't need this here
     	getMenuInflater().inflate(R.menu.edit_profile_menu, menu);
         return true;
     }
@@ -318,8 +282,6 @@ public class EditProfileActivity extends ActionBarActivity implements OnItemSele
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-       
-
     	int id = item.getItemId();
         if (id == R.id.save) {
         	saveChanges();
@@ -328,7 +290,6 @@ public class EditProfileActivity extends ActionBarActivity implements OnItemSele
         return super.onOptionsItemSelected(item);
     }
     
-
 	@Override
 	public void onItemSelected(AdapterView<?> parent, View view, int pos,
 			long id) {
@@ -337,12 +298,9 @@ public class EditProfileActivity extends ActionBarActivity implements OnItemSele
 		//store setting based on selection
 		
 	}
-
-
+	
 	@Override
 	public void onNothingSelected(AdapterView<?> parent) {
 		//nothing to do here
-		
 	}
-    
 }

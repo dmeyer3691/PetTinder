@@ -2,7 +2,6 @@ package com.pettinder;
 
 import android.support.v7.app.ActionBarActivity;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -36,23 +35,6 @@ public class MatchesActivity extends ActionBarActivity {
 		Intent intent = new Intent(getApplicationContext(), MessagingActivity.class);
         intent.putExtra("RECIPIENT_ID", matches.get(pos));
         startActivity(intent);
-        /*
-	    ParseQuery<ParseUser> query = ParseUser.getQuery();
-	    query.whereEqualTo("objectId", matches.get(pos));
-	    query.findInBackground(new FindCallback<ParseUser>() {
-	       public void done(List<ParseUser> user, ParseException e) {
-	           if (e == null) {
-	        	   Intent intent = new Intent(getApplicationContext(), MessagingActivity.class);
-	               intent.putExtra("RECIPIENT_ID", user.get(0).getObjectId());
-	               startActivity(intent);
-	           } else {
-	               Toast.makeText(getApplicationContext(),
-	                   "Error finding that user",
-	                       Toast.LENGTH_SHORT).show();
-	           }
-	       }
-	    });
-	    */
 	}
     
     @Override
@@ -128,7 +110,6 @@ public class MatchesActivity extends ActionBarActivity {
         	}
         });
     }
-
     
     @Override
     protected void onStart(){
@@ -180,7 +161,5 @@ public class MatchesActivity extends ActionBarActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-    
-    
+    }   
 }

@@ -1,8 +1,5 @@
 package com.pettinder;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-
 import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
@@ -11,19 +8,13 @@ import com.parse.ParseObject;
 import com.parse.ParseUser;
 
 import android.support.v7.app.ActionBarActivity;
-import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -39,12 +30,8 @@ public class MyProfileActivity extends ActionBarActivity {
 	BitmapDrawable imageBitmap;
 	private final String TAG = "MyProfileActivity";
 	
-	
 	private void getParseUserData(){
-
-
 		if (currentUser.has("myPetProfile") && (petProfile!= null)){
-
 			if(petProfile.has("petName")){
 				petName.setText(petProfile.getString("petName")+", ");
 				aboutPet.setText("About " + petProfile.getString("petName"));
@@ -78,9 +65,7 @@ public class MyProfileActivity extends ActionBarActivity {
 		} else {
 			Log.d(TAG, "no profile available");
 		}
-		
 	}
-	
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,25 +84,18 @@ public class MyProfileActivity extends ActionBarActivity {
         aboutPet = (TextView) findViewById(R.id.bio);
         currentUser = ParseUser.getCurrentUser();
         
-
-        
         try {
         	if (currentUser.has("myPetProfile")){
     			petProfile = currentUser.getParseObject("myPetProfile").fetchIfNeeded();
         	}
 			Log.d(TAG, "retrieved petProfile");
-
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			Log.d(TAG,"error fetching");
 		}
-        
-
     }
 
-
-    
     @Override
     protected void onStart(){
     	super.onStart();
@@ -131,8 +109,7 @@ public class MyProfileActivity extends ActionBarActivity {
     @Override
     protected void onResume(){
     	super.onResume();
-    	
-    	
+
     	if ((currentUser != null) && ParseFacebookUtils.isLinked(currentUser)) {
         	//user logged in through facebook
     		try {
@@ -189,7 +166,5 @@ public class MyProfileActivity extends ActionBarActivity {
         	return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-    
-    
+    }   
 }

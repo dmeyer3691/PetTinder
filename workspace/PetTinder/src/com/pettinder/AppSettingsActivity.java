@@ -19,12 +19,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
 public class AppSettingsActivity extends ActionBarActivity {
 
-	Intent settingsIntent, mainIntent;
+	Intent mainIntent;
 	Button logoutButton, deleteButton;
 	private static final String TAG = "AppSettingsActivity";
 	ParseUser currentUser;
@@ -32,7 +31,7 @@ public class AppSettingsActivity extends ActionBarActivity {
 	TextView profileName;
 	View.OnClickListener delete = (new View.OnClickListener() {
 		public void onClick(View v){
-			// todo
+			// todo delete everything in parse associated with this user
 			
 		}
 	});
@@ -113,7 +112,6 @@ public class AppSettingsActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_app_settings);
         //define intents
-        settingsIntent = new Intent(this, SettingsActivity.class);
         mainIntent = new Intent(this, MainActivity.class);
         deleteButton = (Button) findViewById(R.id.delete_account_button);
         deleteButton.setOnClickListener(delete);
@@ -166,9 +164,6 @@ public class AppSettingsActivity extends ActionBarActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-    	
-    	//shoulnd't need this
-        //getMenuInflater().inflate(R.menu.view_profile_menu, menu);
         return true;
     }
 
@@ -177,16 +172,6 @@ public class AppSettingsActivity extends ActionBarActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-    	
-    	
-    	//shoulnd't need this
-    	/*
-        int id = item.getItemId();
-        if (id == R.id.settings) {
-        	startActivity(settingsIntent);
-            return true;
-        }
-        */
         return super.onOptionsItemSelected(item);
     }
     

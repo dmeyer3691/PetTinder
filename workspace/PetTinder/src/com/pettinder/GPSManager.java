@@ -15,9 +15,11 @@ public class GPSManager {
 	private Activity activity;
     private LocationManager mlocManager;
     private LocationListener gpsListener;
+    Intent discoveryIntent;
 
     public GPSManager(Activity activity) {
         this.activity = activity;
+        discoveryIntent = new Intent(activity, DiscoveryActivity.class);
     }
 
     public void start() {
@@ -27,11 +29,12 @@ public class GPSManager {
         if (mlocManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             setUp();
             findLoc();
+            activity.startActivity(discoveryIntent);
         } else {
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                     activity);
             alertDialogBuilder
-                    .setMessage("GPS is disabled in your device. Enable it?")
+                    .setMessage("GPS is disabled in your device. For PetTinder to work it must be enabled. Enable it?")
                     .setCancelable(false)
                     .setPositiveButton("Enable GPS",
                             new DialogInterface.OnClickListener() {
@@ -45,12 +48,18 @@ public class GPSManager {
             alertDialogBuilder.setNegativeButton("Cancel",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
+                        	//not sure if we should destroy app on cancel
+                        	activity.finish();
+                        	// or simply start them in a loop that makes them enable it
+                        	/*
                             dialog.cancel();
+                            Toast.makeText(activity, "GPS must be enabled", Toast.LENGTH_SHORT).show(); 
+                            start();
+                            */
                         }
                     });
             AlertDialog alert = alertDialogBuilder.create();
             alert.show();
-
         }
     }
 

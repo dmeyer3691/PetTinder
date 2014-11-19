@@ -3,7 +3,6 @@ package com.pettinder;
 import android.support.v7.app.ActionBarActivity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -45,8 +44,6 @@ public class SettingsActivity extends ActionBarActivity {
         discoveryPreferencesIntent = new Intent(this, DiscoveryPreferencesActivity.class);
         appSettingsIntent = new Intent(this, AppSettingsActivity.class);
         
-
-        
         // define buttons
         viewProfileButton = (Button) findViewById(R.id.Button00);
         viewProfileButton.setOnClickListener(viewProfile);
@@ -59,7 +56,6 @@ public class SettingsActivity extends ActionBarActivity {
         //take this out once if we have sharing functionality
         shareButton.setVisibility(View.INVISIBLE);
     }
-
     
     @Override
     protected void onStart(){
@@ -94,9 +90,6 @@ public class SettingsActivity extends ActionBarActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-    	
-    	// shouldn't need menu here
-        //getMenuInflater().inflate(R.menu.matches_menu, menu);
         return true;
     }
 
@@ -105,16 +98,6 @@ public class SettingsActivity extends ActionBarActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-    	
-    	// shouldn't need menu here
-    	/*
-        int id = item.getItemId();
-        if (id == R.id.settings) {
-            return true;
-        }
-        */
         return super.onOptionsItemSelected(item);
-    }
-    
-    
+    }   
 }

@@ -19,7 +19,6 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Button;
 
 import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
@@ -37,6 +36,7 @@ public class DiscoveryActivity extends ActionBarActivity {
 	private ParseUser currentUser, potentialUserMatch;
 	private List<ParseUser> potentialMatches, allUsers;
 	private ImageView profilePic;
+	private ImageButton yes, no, profile;
 	private TextView name, breed;
 
 	private static final String TAG = "DiscoveryActivity";
@@ -98,10 +98,6 @@ public class DiscoveryActivity extends ActionBarActivity {
 			}
 			Log.d(TAG, currentId);
 		} else if (liked) {
-			/*
-			 * ParseQuery<ParseObject> query = ParseQuery.getQuery("user");
-			 * ParseObject temp = null;
-			 */
 			ParseObject temp = null;
 			try {
 				// temp = query.get(currentId).fetchIfNeeded();
@@ -132,9 +128,6 @@ public class DiscoveryActivity extends ActionBarActivity {
 			name.setText("No pets left in the area!");
 			breed.setText("");
 			currentId = "";
-			ImageButton yes = (ImageButton) findViewById(R.id.discoveryYes);
-			ImageButton no = (ImageButton) findViewById(R.id.discoveryNo);
-			ImageButton profile = (ImageButton) findViewById(R.id.discoveryMore);
 			yes.setVisibility(View.GONE);
 			no.setVisibility(View.GONE);
 			profile.setVisibility(View.GONE);
@@ -155,22 +148,22 @@ public class DiscoveryActivity extends ActionBarActivity {
 		name = (TextView) findViewById(R.id.discoveryName);
 		breed = (TextView) findViewById(R.id.discoveryBreed);
 		// Register buttons
-		ImageButton noButton = (ImageButton) findViewById(R.id.discoveryNo);
-		noButton.setOnClickListener(new ImageButton.OnClickListener() {
+		no = (ImageButton) findViewById(R.id.discoveryNo);
+		no.setOnClickListener(new ImageButton.OnClickListener() {
 			public void onClick(View v) {
 				handleDiscoverySelection(false);
 			}
 		});
 
-		ImageButton yesButton = (ImageButton) findViewById(R.id.discoveryYes);
-		yesButton.setOnClickListener(new ImageButton.OnClickListener() {
+		yes = (ImageButton) findViewById(R.id.discoveryYes);
+		yes.setOnClickListener(new ImageButton.OnClickListener() {
 			public void onClick(View v) {
 				handleDiscoverySelection(true);
 			}
 		});
 
-		ImageButton moreButton = (ImageButton) findViewById(R.id.discoveryMore);
-		moreButton.setOnClickListener(new ImageButton.OnClickListener() {
+		profile = (ImageButton) findViewById(R.id.discoveryMore);
+		profile.setOnClickListener(new ImageButton.OnClickListener() {
 			public void onClick(View v) {
 
 				// probably to intent.putExtra(something) to know which profile
@@ -198,13 +191,6 @@ public class DiscoveryActivity extends ActionBarActivity {
 		} catch (ParseException e) {
 			Log.d(TAG, "Error: cannot retrieve nearby users");
 		}
-
-		// try { if (currentUser.has("myPetProfile")) { petProfile =
-		// currentUser.getParseObject("myPetProfile") .fetchIfNeeded(); }
-		// Log.d(TAG, "retrieved petProfile");
-		//
-		// } catch (ParseException e) { // TODO Auto-generated catch block
-		// e.printStackTrace(); Log.d(TAG, "error fetching"); }
 
 		// Initialize userChoices to store data, setting its object ID to the
 		// current user's username
@@ -269,9 +255,6 @@ public class DiscoveryActivity extends ActionBarActivity {
 			name.setText("No pets left in the area!");
 			breed.setText("");
 			currentId = "";
-			ImageButton yes = (ImageButton) findViewById(R.id.discoveryYes);
-			ImageButton no = (ImageButton) findViewById(R.id.discoveryNo);
-			ImageButton profile = (ImageButton) findViewById(R.id.discoveryMore);
 			yes.setVisibility(View.GONE);
 			no.setVisibility(View.GONE);
 			profile.setVisibility(View.GONE);

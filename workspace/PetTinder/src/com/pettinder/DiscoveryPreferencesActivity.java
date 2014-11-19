@@ -21,16 +21,10 @@ public class DiscoveryPreferencesActivity extends ActionBarActivity {
         getFragmentManager().beginTransaction()
         	.replace(android.R.id.content, new DiscoveryPreferencesFragment())
         	.commit();
-        
-        //setContentView(R.layout.activity_discovery_preferences);
         //define intents
         settingsIntent = new Intent(this, SettingsActivity.class);
-
-        
-        // Grab list of matches for current user from AWS and display as buttons with pictures
     }
-
-    
+  
     @Override
     protected void onStart(){
     	super.onStart();
@@ -64,8 +58,6 @@ public class DiscoveryPreferencesActivity extends ActionBarActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-    	// shouldn't need this here
-        //getMenuInflater().inflate(R.menu.discovery_settings_menu, menu);
         return true;
     }
 
@@ -74,16 +66,6 @@ public class DiscoveryPreferencesActivity extends ActionBarActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-    	
-    	//shouldn't need this
-        /*int id = item.getItemId();
-        if (id == R.id.settings) {
-        	startActivity(settingsIntent);
-            return true;
-        }*/
         return super.onOptionsItemSelected(item);
-    }
-    
-    
+    }   
 }
-
