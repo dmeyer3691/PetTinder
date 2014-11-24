@@ -21,9 +21,10 @@
             android:id="@+id/discoveryImage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
+            android:gravity="top"
+            android:layout_alignParentTop="true"
             android:contentDescription="@string/discoveryImage"
-            android:src="@drawable/loudnoises" />
+            android:src="@drawable/loading" />
 
         <LinearLayout
             android:id="@+id/ProfileInfoLayout"
