@@ -23,8 +23,8 @@
     <string name="discoveryYes">Yes</string>
     <string name="discoveryMore">Profile Options</string>
     <string name="discoveryImage">Profile Picture</string>
-    <string name="discoveryName">Default Name</string>
-    <string name="discoveryBreed">Default Breed</string>
+    <string name="discoveryName">Loading Profiles</string>
+    <string name="discoveryBreed">...</string>
     <string name="search_string">Search</string>
     <string name="profile_picture_string">Profile Picture</string>
     <string name="profile_bio_string">Profile Biography</string>
