@@ -115,7 +115,9 @@ public class DiscoveryActivity extends ActionBarActivity {
 				e.printStackTrace();
 			}
 			Log.d(TAG, currentId);
-		} else if (liked) { // TODO ********** Should this really be an else?
+		}
+		// add match object
+		if (liked) {
 			// Check for a mutual like
 			ParseObject temp = null;
 			try {
