@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.os.AsyncTask;
 import android.content.res.Resources;
 
+import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseFile;
@@ -160,6 +161,7 @@ public class DiscoveryActivity extends ActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_discovery);
+		Parse.initialize(this, "bl9sFBxmrkDhNWSDxnlvbLIbeFrQ9kHUGEbBRI4a", "tCzPn6RbPx2ZJUmGc7AMb2eBoetXgO02A4jefTHp");
 		// define intents
 		matchesIntent = new Intent(this, MatchesActivity.class);
 		settingsIntent = new Intent(this, SettingsActivity.class);
@@ -326,7 +328,7 @@ public class DiscoveryActivity extends ActionBarActivity {
 	@Override
 	protected void onPause() {
 		super.onPause();
-		currentUser.saveInBackground();
+		if(currentUser != null) currentUser.saveInBackground();
 	}
 
 	@Override
